@@ -10,6 +10,10 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 	send: 'Send',
 	clear: 'Clear',
 
+	//Options
+	noDirectEntry : true,
+	building: false,
+
 	initComponent: function() {
 
 		// Set default values to optional parameters of the configuration
@@ -17,6 +21,14 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 
 		});
 
+		var clearForm = function() {
+			temp = Ext.getCmp('toTextField').setValue("");
+			Ext.getCmp('ccTextField').setValue("");
+			Ext.getCmp('subjectTextField').setValue("");
+			Ext.getCmp('emailText').setValue("");
+			Ext.getCmp('keepCopyCheck').setValue(false);
+		};
+		
 		// Prepare config
 		var config = {
 			title: 'New Email',
@@ -25,25 +37,25 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 			frame: true,
 			bodyStyle: 'padding:10px 5px 5px;',
 			bbar: {
-			items: [
-			' ',
-			{
-				xtype: 'checkbox',
-				name: 'copy',
-				boxLabel: this.keepCopy
+				items: [
+				' ',{
+					xtype: 'checkbox',
+					name: 'copy',
+					boxLabel: this.keepCopy,
+					id: 'keepCopyCheck'
+				},
+				'->',{
+					width: 65,
+					xtype: 'button',
+					text: this.send
+				},
+				' ',{
+					width: 65,
+					xtype: 'button',
+					text: this.clear,
+					handler: clearForm
+				}]
 			},
-			'->',
-			{
-				width: 65,
-				xtype: 'button',
-				text: this.send
-			},
-			' ',
-			{
-				width: 65,
-				xtype: 'button',
-				text: this.clear
-			}]},
 			items: {
 				baseCls: 'x-plain',
 				layout:'absolute',
@@ -60,6 +72,7 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 				},{
 					x: 70,
 					y: 0,
+					id: 'toTextField',
 					name: 'to',
 					anchor:'100%'  // anchor width by %
 				},{
@@ -71,6 +84,7 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 				},{
 					x: 70,
 					y: 27,
+					id: 'ccTextField',
 					name: 'cc',
 					anchor: '100%'  // anchor width by %
 				},{
@@ -82,6 +96,7 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 				},{
 					x: 70,
 					y: 54,
+					id: 'subjectTextField',
 					name: 'subject',
 					anchor: '100%'  // anchor width by %
 				},{
@@ -93,6 +108,7 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 				},{
 					x:0,
 					y: 110,
+					id: 'emailText',
 					xtype: 'htmleditor',
 					name: 'msg',
 					anchor: '100% 100%'  // anchor width and height
