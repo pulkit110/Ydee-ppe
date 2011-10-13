@@ -2,8 +2,13 @@ Ext.ns('Ydee');
 Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 
 	// Translatable strings...
-	msg1: 'msg1',
-	msg2: 'msg2',
+	to: 'To',
+	cc: 'cc',
+	subject: 'Subject',
+	documents: 'Documents',
+	keepCopy: 'Keep a Copy',
+	send: 'Send',
+	clear: 'Clear',
 
 	initComponent: function() {
 
@@ -19,6 +24,26 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 			layout: 'fit',
 			frame: true,
 			bodyStyle: 'padding:10px 5px 5px;',
+			bbar: {
+			items: [
+			' ',
+			{
+				xtype: 'checkbox',
+				name: 'copy',
+				boxLabel: this.keepCopy
+			},
+			'->',
+			{
+				width: 65,
+				xtype: 'button',
+				text: this.send
+			},
+			' ',
+			{
+				width: 65,
+				xtype: 'button',
+				text: this.clear
+			}]},
 			items: {
 				baseCls: 'x-plain',
 				layout:'absolute',
@@ -31,7 +56,7 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 					y: 5,
 					width: 65,
 					xtype: 'button',
-					text: 'To'
+					text: this.to
 				},{
 					x: 70,
 					y: 0,
@@ -42,7 +67,7 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 					y: 32,
 					width: 65,
 					xtype: 'button',
-					text: 'CC'
+					text: this.cc
 				},{
 					x: 70,
 					y: 27,
@@ -53,7 +78,7 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 					y: 59,
 					width: 65,
 					xtype: 'label',
-					text: 'Subject:'
+					text: this.subject
 				},{
 					x: 70,
 					y: 54,
@@ -64,7 +89,7 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 					y: 81,
 					width: 65,
 					xtype: 'button',
-					text: 'Documents'
+					text: this.documents
 				},{
 					x:0,
 					y: 110,
