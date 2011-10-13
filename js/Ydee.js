@@ -11,7 +11,8 @@ Ext.ns('Ydee');
 Ext.onReady(function() {
  
     Ext.QuickTips.init();
-    var emailPanel = new Ydee.SendEmailDlg();
+    //var emailPanel = new Ydee.SendEmailDlg();
+    var recipientDlg = new Ydee.RecipientSelDlg();
     
     var contentPanel = {
          id: 'content-panel',
@@ -20,7 +21,7 @@ Ext.onReady(function() {
          margins: '2 5 5 0',
          activeItem: 0,
          border: false,
-         items: emailPanel
+         items: recipientDlg//emailPanel
     };
     
     var viewport = new Ext.Viewport({
