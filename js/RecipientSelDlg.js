@@ -11,6 +11,9 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 	allOwnersBldg: 'All owners of building',
 	ok: 'Ok',
 	cancel: 'Cancel',
+	
+	//options
+	building: false,
 
 	initComponent: function() {
 
@@ -97,8 +100,10 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 			root   : 'records'
 		});
 
+var sm = new Ext.grid.CheckboxSelectionModel();
+
 		// Column Model shortcut array
-		var cols = [{
+		var cols = [sm,{
 			id : 'fname',
 			header: "fname",
 			width: 160,
@@ -113,7 +118,8 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 			header: "bnumber",
 			width: 50,
 			sortable: true,
-			dataIndex: 'bnumber'
+			dataIndex: 'bnumber',
+			hidden:this.building
 		},{
 			header: "anumber",
 			width: 50,
@@ -127,16 +133,12 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 			ddGroup          : 'gridDDGroup',
 			store            : gridStore,
 			columns          : cols,
-			enableDragDrop   : true,
+			sm: sm,
 			stripeRows       : true,
 			autoExpandColumn : 'fname',
 			width            : 650,
 			height           : 325,
-			//region           : 'west',
-			title            : 'Data Grid',
-			selModel         : new Ext.grid.RowSelectionModel({
-				singleSelect : true
-			})
+			enableColumnHide: false
 		});
 
 		// Prepare config
@@ -178,6 +180,7 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 					boxLabel: this.allOwners,
 					name:'allOwners'
 				},{
+					hidden: this.building,
 					boxLabel: this.allOwnersBldg,
 					name:'allOwnersBld'
 				}]

@@ -12,7 +12,9 @@ Ext.onReady(function() {
  
     Ext.QuickTips.init();
     //var emailPanel = new Ydee.SendEmailDlg();
-    var recipientDlg = new Ydee.RecipientSelDlg();
+    var recipientDlg = new Ydee.RecipientSelDlg({
+    	building: true
+    });
     
     var contentPanel = {
          id: 'content-panel',
