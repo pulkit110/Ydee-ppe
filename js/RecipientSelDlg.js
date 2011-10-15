@@ -6,12 +6,12 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 	contacts: 'Contacts',
 	admin: 'Administrator',
 	accountant: 'Accountant',
-	owners: 'Owners',
+	ownersStr: 'Owners',
 	allOwners: 'All owners',
 	allOwnersBldg: 'All owners of building',
 	ok: 'Ok',
 	cancel: 'Cancel',
-	
+
 	//options
 	building: false,
 
@@ -22,62 +22,6 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 
 		});
 
-		var myData = {
-			records : [{
-				fname : "Record 0",
-				lname: "Goyal",
-				bnumber : "0",
-				anumber : "0"
-			},{
-				fname : "Record 1",
-				lname: "Goyal",
-				bnumber: "1",
-				anumber: "1"
-			},{
-				fname : "Record 2",
-				lname: "Goyal",
-				bnumber : "2",
-				anumber : "2"
-			},{
-				fname : "Record 3",
-				lname: "Goyal",
-				bnumber : "3",
-				anumber : "3"
-			},{
-				fname : "Record 4",
-				lname: "Goyal",
-				bnumber : "4",
-				anumber : "4"
-			},{
-				fname : "Record 5",
-				lname: "Goyal",
-				bnumber : "5",
-				anumber : "5"
-			},{
-				fname : "Record 6",
-				lname: "Goyal",
-				bnumber : "6",
-				anumber : "6"
-			},{
-				fname : "Record 7",
-				lname: "Goyal",
-				bnumber : "7",
-				anumber : "7"
-			},{
-				fname : "Record 8",
-				lname: "Goyal",
-				bnumber : "8",
-				anumber : "8"
-			},{
-				fname : "Record 9",
-				lname: "Goyal",
-				bnumber : "9",
-				anumber : "9"
-			}
-			]
-		};
-
-		// Generic fields array to use in both store defs.
 		var fields = [{
 			name: 'fname',
 			mapping : 'fname'
@@ -90,17 +34,30 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 		},{
 			name: 'anumber',
 			mapping : 'anumber'
+		}, {
+			name : 'email',
+			mapping: 'email'
 		}
 		];
+
+		var ownerRecords = new Array();
+		
+		for (var i = 0; i < this.owners.length; ++i) {
+			ownerRecords[i] = this.owners[i];
+		}
+		
+		var ownerData = {
+			records: ownerRecords
+		};
 
 		// create the data store
 		var gridStore = new Ext.data.JsonStore({
 			fields : fields,
-			data   : myData,
+			data   : ownerData,
 			root   : 'records'
 		});
 
-var sm = new Ext.grid.CheckboxSelectionModel();
+		var sm = new Ext.grid.CheckboxSelectionModel();
 
 		// Column Model shortcut array
 		var cols = [sm,{
@@ -125,6 +82,11 @@ var sm = new Ext.grid.CheckboxSelectionModel();
 			width: 50,
 			sortable: true,
 			dataIndex: 'anumber'
+		},{
+			header: "email",
+			width: 50,
+			dataIndex: 'email',
+			hidden:true
 		}
 		];
 
@@ -135,7 +97,7 @@ var sm = new Ext.grid.CheckboxSelectionModel();
 			columns          : cols,
 			sm: sm,
 			stripeRows       : true,
-			autoExpandColumn : 'fname',
+			// autoExpandColumn : 'fname',
 			width            : 650,
 			height           : 325,
 			enableColumnHide: false
@@ -165,24 +127,57 @@ var sm = new Ext.grid.CheckboxSelectionModel();
 				xtype: 'checkboxgroup',
 				fieldLabel: this.contacts,
 				columns:2,
+				listeners : {
+					change : {
+						fn : function(checkbox, checked) {
+							//TODO Select records from grid based on the selected checkboxes
+							//checked is an array of selected checkboxes
+						}
+					}
+				},
 				items:[{
 					boxLabel: this.admin,
-					name:'admin'
+					name:'admin',
+					listeners: {
+						check: function() {
+							var checked = this.getValue();
+						}
+					}
 				},{
 					boxLabel: this.accountant,
-					name:'accountant'
+					name:'accountant',
+					listeners: {
+						check: function() {
+							var checked = this.getValue();
+						}
+					}
 				}]
 			},{
 				xtype: 'checkboxgroup',
-				fieldLabel: this.owners,
+				fieldLabel: this.ownersStr,
 				columns:2,
 				items:[{
 					boxLabel: this.allOwners,
-					name:'allOwners'
+					name:'allOwners',
+					listeners: {
+						check: function() {
+							var checked = this.getValue();
+							if (checked) {
+								grid.getSelectionModel().selectAll();
+							} else {
+								grid.getSelectionModel().clearSelections();
+							}
+						}
+					}
 				},{
 					hidden: this.building,
 					boxLabel: this.allOwnersBldg,
-					name:'allOwnersBld'
+					name:'allOwnersBld',
+					listeners: {
+						check: function() {
+							var checked = this.getValue();
+						}
+					}
 				}]
 			},grid]
 		};
