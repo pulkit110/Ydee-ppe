@@ -33,6 +33,10 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 		var getIds = function() {
 
 		};
+function handleClick() {
+			alert("sapan");
+		}
+		
 		var setToIds = function() {
 			var recipientSelDialog = new Ydee.RecipientSelDlg({
 				owners: emailDlg.owners,
@@ -41,11 +45,28 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 				otherContacts: emailDlg.otherContacts,
 				idsHandler: function(records) {
 					emailDlg.toRecords = records;
-					var toEmailList = "";
+					
+					var toFieldListDiv = $('#toFieldDiv');//.appendChild(toFieldList);
+					var toFieldList = toFieldListDiv.get(0);//document.createElement('ul');					
+						
 					for (var i = 0; i < records.length; ++i) {
-						toEmailList += records[i].data.email + ", ";
+
+						var emailSpan = document.createElement('span');
+						emailSpan.className += ' ' + 'to-field-element';
+						emailSpan.innerHTML = records[i].data.email;
+
+						toFieldList.appendChild(emailSpan);
 					}
-					Ext.getCmp('toTextField').setValue(toEmailList);
+					
+					Ext.select('.to-field-element').on('click',function() {
+						var temp = this;
+						alert($(this).parent().children().index(this));
+					});
+					
+					$('#toFieldDiv').click(handleClick);
+					Ext.select('toFieldDiv').on('click',function() {
+						alert("Pulkit");
+					});
 				}
 			});
 
@@ -67,6 +88,7 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 					for (var i = 0; i < records.length; ++i) {
 						ccEmailList += records[i].data.email + ", ";
 					}
+
 					Ext.getCmp('ccTextField').setValue(ccEmailList);
 				}
 			});
@@ -120,12 +142,21 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 					handler: setToIds,
 					scope: this
 				},{
+					xtype: 'panel',
+					x: 70,
+					y: 8,
+					id:'toFieldDiv',
+					anchor: '100%'
+					// width: 300,
+					// height: 5
+				},{
 					x: 70,
 					y: 0,
 					id: 'toTextField',
 					name: 'to',
 					anchor:'100%',
-					disabled: this.noDirectEntry
+					disabled: this.noDirectEntry,
+					hidden : this.noDirectEntry
 				},{
 					x: 0,
 					y: 32,
