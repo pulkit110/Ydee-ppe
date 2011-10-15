@@ -17,6 +17,8 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 
 	initComponent: function() {
 
+		var recipientSelDlg = this;
+		
 		// Set default values to optional parameters of the configuration
 		Ext.applyIf(this.initialConfig, {
 
@@ -102,7 +104,13 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 			height           : 325,
 			enableColumnHide: false
 		});
-
+		
+		var sendIds = function() {
+			var records = grid.getSelectionModel().getSelections();
+			recipientSelDlg.idsHandler(records);
+			recipientSelDlg.ownerCt.close();
+		};
+		
 		// Prepare config
 		var config = {
 			title: this.title,
@@ -115,32 +123,30 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 				items: [{
 					width: 65,
 					xtype: 'button',
-					text: this.ok
+					text: this.ok,
+					handler: sendIds
 				},
 				' ',{
 					width: 65,
 					xtype: 'button',
 					text: this.cancel,
+					handler: function() {
+						recipientSelDlg.ownerCt.close();
+					}
 				}]
 			},
 			items: [{
 				xtype: 'checkboxgroup',
 				fieldLabel: this.contacts,
 				columns:2,
-				listeners : {
-					change : {
-						fn : function(checkbox, checked) {
-							//TODO Select records from grid based on the selected checkboxes
-							//checked is an array of selected checkboxes
-						}
-					}
-				},
 				items:[{
 					boxLabel: this.admin,
 					name:'admin',
 					listeners: {
 						check: function() {
 							var checked = this.getValue();
+							for (var i = 0; i < grid.getStore().getTotalCount(); ++i) {
+							}
 						}
 					}
 				},{
@@ -149,6 +155,8 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 					listeners: {
 						check: function() {
 							var checked = this.getValue();
+							for (var i = 0; i < grid.getStore().getTotalCount(); ++i) {
+							}
 						}
 					}
 				}]
@@ -162,6 +170,8 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 					listeners: {
 						check: function() {
 							var checked = this.getValue();
+							for (var i = 0; i < grid.getStore().getTotalCount(); ++i) {
+							}
 							if (checked) {
 								grid.getSelectionModel().selectAll();
 							} else {
@@ -176,6 +186,9 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 					listeners: {
 						check: function() {
 							var checked = this.getValue();
+							for (var i = 0; i < grid.getStore().getTotalCount(); ++i) {
+								var temp = grid.getStore().getAt(i);
+							}
 						}
 					}
 				}]

@@ -12,6 +12,11 @@ Ext.onReady( function() {
 
 	Ext.QuickTips.init();
 
+	var user = {
+		bnumber: "2",
+		email: "xyz@abc.com"
+	};
+
 	var owners = [{
 		fname : "Record 0",
 		lname: "Goyal",
@@ -74,12 +79,35 @@ Ext.onReady( function() {
 		email : "abc@xyz.com"
 	}
 	];
+	var otherContacts = [{
+		fname : "Record 9",
+		lname: "Goyal",
+		email : "abc@xyz.com",
+		type : "admin"
+	}, {
+		fname : "Record 10",
+		lname: "Goyal",
+		email : "abc@xyz.com",
+		type : "admin"
+	}, {
+		fname : "Record 11",
+		lname: "Goyal",
+		email : "abc@xyz.com",
+		type : "admin"
+	}, {
+		fname : "Record 12",
+		lname: "Goyal",
+		email : "abc@xyz.com",
+		type : "accountant"
+	}, 
+	]; 
 
-	//var emailPanel = new Ydee.SendEmailDlg();
-	var recipientDlg = new Ydee.RecipientSelDlg({
-		building: true, 
-		owners: owners
+	var emailPanel = new Ydee.SendEmailDlg({
+		building : false,
+		user : user,
+		owners : owners
 	});
+	// var recipientDlg = new Ydee.RecipientSelDlg();
 
 	var contentPanel = {
 		id: 'content-panel',
@@ -88,7 +116,7 @@ Ext.onReady( function() {
 		margins: '2 5 5 0',
 		activeItem: 0,
 		border: false,
-		items: recipientDlg//emailPanel
+		items: emailPanel//recipientDlg
 	};
 
 	var viewport = new Ext.Viewport({

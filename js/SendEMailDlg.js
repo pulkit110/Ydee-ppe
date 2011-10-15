@@ -16,19 +16,67 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 
 	initComponent: function() {
 
+		var emailDlg = this;
+
 		// Set default values to optional parameters of the configuration
 		Ext.applyIf(this.initialConfig, {
 
 		});
 
 		var clearForm = function() {
-			temp = Ext.getCmp('toTextField').setValue("");
+			Ext.getCmp('toTextField').setValue("");
 			Ext.getCmp('ccTextField').setValue("");
 			Ext.getCmp('subjectTextField').setValue("");
 			Ext.getCmp('emailText').setValue("");
 			Ext.getCmp('keepCopyCheck').setValue(false);
 		};
-		
+		var getIds = function() {
+
+		};
+		var setToIds = function() {
+			var recipientSelDialog = new Ydee.RecipientSelDlg({
+				owners: emailDlg.owners,
+				user: emailDlg.user,
+				building: emailDlg.building,
+				otherContacts: emailDlg.otherContacts,
+				idsHandler: function(records) {
+					emailDlg.toRecords = records;
+					var toEmailList = "";
+					for (var i = 0; i < records.length; ++i) {
+						toEmailList += records[i].data.email + ", ";
+					}
+					Ext.getCmp('toTextField').setValue(toEmailList);
+				}
+			});
+
+			var recipientSelDialogWindow = new Ext.Window({
+				width:300,
+				items: recipientSelDialog
+			});
+			recipientSelDialogWindow .show();
+		};
+		var setCCIds = function() {
+			var recipientSelDialog = new Ydee.RecipientSelDlg({
+				owners: emailDlg.owners,
+				user: emailDlg.user,
+				building: emailDlg.building,
+				otherContacts: emailDlg.otherContacts,
+				idsHandler: function(records) {
+					emailDlg.ccRecords = records;
+					var ccEmailList = "";
+					for (var i = 0; i < records.length; ++i) {
+						ccEmailList += records[i].data.email + ", ";
+					}
+					Ext.getCmp('ccTextField').setValue(ccEmailList);
+				}
+			});
+
+			var recipientSelDialogWindow = new Ext.Window({
+				width:300,
+				items: recipientSelDialog
+			});
+			recipientSelDialogWindow .show();
+		};
 		// Prepare config
 		var config = {
 			title: 'New Email',
@@ -68,25 +116,30 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 					y: 5,
 					width: 65,
 					xtype: 'button',
-					text: this.to
+					text: this.to,
+					handler: setToIds,
+					scope: this
 				},{
 					x: 70,
 					y: 0,
 					id: 'toTextField',
 					name: 'to',
-					anchor:'100%'  // anchor width by %
+					anchor:'100%',
+					disabled: this.noDirectEntry
 				},{
 					x: 0,
 					y: 32,
 					width: 65,
 					xtype: 'button',
-					text: this.cc
+					text: this.cc,
+					handler: setCCIds
 				},{
 					x: 70,
 					y: 27,
 					id: 'ccTextField',
 					name: 'cc',
-					anchor: '100%'  // anchor width by %
+					anchor: '100%',
+					disabled: this.noDirectEntry
 				},{
 					x: 0,
 					y: 59,
