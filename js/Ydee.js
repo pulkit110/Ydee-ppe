@@ -19,85 +19,85 @@ Ext.onReady( function() {
 
 	var owners = [{
 		fname : "Record 0",
-		lname: "Goyal",
+		lname: "Goyal1",
 		bnumber : "0",
 		anumber : "0",
-		email : "abc@xyz.com"
+		email : "abc1@xyz.com"
 	},{
 		fname : "Record 1",
-		lname: "Goyal",
+		lname: "Goyal2",
 		bnumber: "1",
 		anumber: "1",
-		email : "abc@xyz.com"
+		email : "abc2@xyz.com"
 	},{
 		fname : "Record 2",
-		lname: "Goyal",
+		lname: "Goyal3",
 		bnumber : "2",
 		anumber : "2",
-		email : "abc@xyz.com"
+		email : "abc3@xyz.com"
 	},{
 		fname : "Record 3",
-		lname: "Goyal",
+		lname: "Goyal4",
 		bnumber : "3",
 		anumber : "3",
-		email : "abc@xyz.com"
+		email : "abc4@xyz.com"
 	},{
 		fname : "Record 4",
-		lname: "Goyal",
+		lname: "Goyal5",
 		bnumber : "4",
 		anumber : "4",
-		email : "abc@xyz.com"
+		email : "abc5@xyz.com"
 	},{
 		fname : "Record 5",
-		lname: "Goyal",
+		lname: "Goyal6",
 		bnumber : "5",
 		anumber : "5",
-		email : "abc@xyz.com"
+		email : "abc6@xyz.com"
 	},{
 		fname : "Record 6",
-		lname: "Goyal",
+		lname: "Goyal7",
 		bnumber : "6",
 		anumber : "6",
-		email : "abc@xyz.com"
+		email : "abc7@xyz.com"
 	},{
 		fname : "Record 7",
-		lname: "Goyal",
+		lname: "Goyal8",
 		bnumber : "7",
 		anumber : "7",
-		email : "abc@xyz.com"
+		email : "abc8@xyz.com"
 	},{
 		fname : "Record 8",
-		lname: "Goyal",
+		lname: "Goyal9",
 		bnumber : "8",
 		anumber : "8",
-		email : "abc@xyz.com"
+		email : "abc9@xyz.com"
 	},{
 		fname : "Record 9",
-		lname: "Goyal",
+		lname: "Goyal0",
 		bnumber : "9",
 		anumber : "9",
-		email : "abc@xyz.com"
+		email : "abc10@xyz.com"
 	}
 	];
 	var otherContacts = [{
 		fname : "Record 9",
-		lname: "Goyal",
-		email : "abc@xyz.com",
+		lname: "Goyal11",
+		email : "abc@xyz11.com",
 		type : "admin"
 	}, {
 		fname : "Record 10",
-		lname: "Goyal",
-		email : "abc@xyz.com",
+		lname: "Goyal12",
+		email : "abc@xyz12.com",
 		type : "admin"
 	}, {
 		fname : "Record 11",
-		lname: "Goyal",
-		email : "abc@xyz.com",
+		lname: "Goyal13",
+		email : "abc@xyz13.com",
 		type : "admin"
 	}, {
 		fname : "Record 12",
-		lname: "Goyal",
-		email : "abc@xyz.com",
+		lname: "Goyal14",
+		email : "abc@xyz14.com",
 		type : "accountant"
 	}, 
 	]; 

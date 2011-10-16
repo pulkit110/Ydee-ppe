@@ -33,10 +33,62 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 		var getIds = function() {
 
 		};
-function handleClick() {
+		function handleClick() {
 			alert("sapan");
 		}
-		
+
+		var fields = [{
+			name: 'fname',
+			mapping : 'fname'
+		},{
+			name: 'lname',
+			mapping : 'lname'
+		},{
+			name: 'bnumber',
+			mapping : 'bnumber'
+		},{
+			name: 'anumber',
+			mapping : 'anumber'
+		},{
+			name : 'email',
+			mapping: 'email'
+		}
+		];
+
+		var ownerRecords = new Array();
+
+		for (var i = 0; i < this.owners.length; ++i) {
+			ownerRecords[i] = this.owners[i];
+		}
+
+		var ownerData = {
+			records: ownerRecords
+		};
+
+		// create the data store
+		var gridStore = new Ext.data.JsonStore({
+			fields : fields,
+			data   : ownerData,
+			root   : 'records'
+		});
+
+		var toSuperBox = new Ext.ux.form.SuperBoxSelect({
+			x: 70,
+			y: 0,
+			// id: 'toTextField',
+			name: 'to',
+			anchor:'100%',
+			store: gridStore,
+			displayField: 'email',
+			mode:'local',
+			triggerAction:'all',
+			emptyText: 'Select an email',
+			selectOnFocus:true,
+			allowAddNewData: true,
+			preventDuplicates: false
+			// valueField: 'email'
+		});
+
 		var setToIds = function() {
 			var recipientSelDialog = new Ydee.RecipientSelDlg({
 				owners: emailDlg.owners,
@@ -45,10 +97,10 @@ function handleClick() {
 				otherContacts: emailDlg.otherContacts,
 				idsHandler: function(records) {
 					emailDlg.toRecords = records;
-					
+
 					var toFieldListDiv = $('#toFieldDiv');//.appendChild(toFieldList);
-					var toFieldList = toFieldListDiv.get(0);//document.createElement('ul');					
-						
+					var toFieldList = toFieldListDiv.get(0);//document.createElement('ul');
+
 					for (var i = 0; i < records.length; ++i) {
 
 						var emailSpan = document.createElement('span');
@@ -57,14 +109,13 @@ function handleClick() {
 
 						toFieldList.appendChild(emailSpan);
 					}
-					
-					Ext.select('.to-field-element').on('click',function() {
+
+					Ext.select('.to-field-element').on('click', function() {
 						var temp = this;
 						alert($(this).parent().children().index(this));
 					});
-					
 					$('#toFieldDiv').click(handleClick);
-					Ext.select('toFieldDiv').on('click',function() {
+					Ext.select('toFieldDiv').on('click', function() {
 						alert("Pulkit");
 					});
 				}
@@ -141,15 +192,19 @@ function handleClick() {
 					text: this.to,
 					handler: setToIds,
 					scope: this
-				},{
-					xtype: 'panel',
-					x: 70,
-					y: 8,
-					id:'toFieldDiv',
-					anchor: '100%'
-					// width: 300,
-					// height: 5
-				},{
+				},
+				toSuperBox
+				// {
+				// xtype: 'panel',
+				// x: 70,
+				// y: 8,
+				// id:'toFieldDiv',
+				// anchor: '100%',
+				// autoWidth: true
+				// width: 300,
+				// height: 5
+				// }
+				,{
 					x: 70,
 					y: 0,
 					id: 'toTextField',
