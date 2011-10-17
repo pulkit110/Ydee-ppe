@@ -75,18 +75,33 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 		var toSuperBox = new Ext.ux.form.SuperBoxSelect({
 			x: 70,
 			y: 0,
-			// id: 'toTextField',
 			name: 'to',
 			anchor:'100%',
 			store: gridStore,
 			displayField: 'email',
 			mode:'local',
 			triggerAction:'all',
-			emptyText: 'Select an email',
+			// emptyText: 'Select an email',
 			selectOnFocus:true,
 			allowAddNewData: true,
-			preventDuplicates: false
-			// valueField: 'email'
+			preventDuplicates: false,
+			valueField: 'email'
+		});
+		
+		var ccSuperBox = new Ext.ux.form.SuperBoxSelect({
+			x: 70,
+			y: 37,
+			name: 'cc',
+			anchor:'100%',
+			store: gridStore,
+			displayField: 'email',
+			mode:'local',
+			triggerAction:'all',
+			// emptyText: 'Select an email',
+			selectOnFocus:true,
+			allowAddNewData: true,
+			preventDuplicates: false,
+			valueField: 'email'
 		});
 
 		var setToIds = function() {
@@ -97,27 +112,11 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 				otherContacts: emailDlg.otherContacts,
 				idsHandler: function(records) {
 					emailDlg.toRecords = records;
-
-					var toFieldListDiv = $('#toFieldDiv');//.appendChild(toFieldList);
-					var toFieldList = toFieldListDiv.get(0);//document.createElement('ul');
-
+					var newToFieldValue = '';
 					for (var i = 0; i < records.length; ++i) {
-
-						var emailSpan = document.createElement('span');
-						emailSpan.className += ' ' + 'to-field-element';
-						emailSpan.innerHTML = records[i].data.email;
-
-						toFieldList.appendChild(emailSpan);
+						newToFieldValue += records[i].data.email + ',';
 					}
-
-					Ext.select('.to-field-element').on('click', function() {
-						var temp = this;
-						alert($(this).parent().children().index(this));
-					});
-					$('#toFieldDiv').click(handleClick);
-					Ext.select('toFieldDiv').on('click', function() {
-						alert("Pulkit");
-					});
+					toSuperBox.setValue(newToFieldValue);
 				}
 			});
 
@@ -135,12 +134,11 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 				otherContacts: emailDlg.otherContacts,
 				idsHandler: function(records) {
 					emailDlg.ccRecords = records;
-					var ccEmailList = "";
+					var newCCFieldValue = '';
 					for (var i = 0; i < records.length; ++i) {
-						ccEmailList += records[i].data.email + ", ";
+						newCCFieldValue += records[i].data.email + ',';
 					}
-
-					Ext.getCmp('ccTextField').setValue(ccEmailList);
+					ccSuperBox.setValue(newCCFieldValue);
 				}
 			});
 
@@ -214,39 +212,40 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 					hidden : this.noDirectEntry
 				},{
 					x: 0,
-					y: 32,
+					y: 42,
 					width: 65,
 					xtype: 'button',
 					text: this.cc,
 					handler: setCCIds
-				},{
-					x: 70,
-					y: 27,
-					id: 'ccTextField',
-					name: 'cc',
-					anchor: '100%',
-					disabled: this.noDirectEntry
-				},{
-					x: 0,
-					y: 59,
+				}, ccSuperBox
+				// },{
+					// x: 70,
+					// y: 27,
+					// id: 'ccTextField',
+					// name: 'cc',
+					// anchor: '100%',
+					// disabled: this.noDirectEntry
+				,{
+					x: 10,
+					y: 77,
 					width: 65,
 					xtype: 'label',
 					text: this.subject
 				},{
 					x: 70,
-					y: 54,
+					y: 74,
 					id: 'subjectTextField',
 					name: 'subject',
 					anchor: '100%'  // anchor width by %
 				},{
 					x: 0,
-					y: 81,
+					y: 105,
 					width: 65,
 					xtype: 'button',
 					text: this.documents
 				},{
 					x:0,
-					y: 110,
+					y: 130,
 					id: 'emailText',
 					xtype: 'htmleditor',
 					name: 'msg',
