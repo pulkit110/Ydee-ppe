@@ -83,9 +83,16 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 			triggerAction:'all',
 			// emptyText: 'Select an email',
 			selectOnFocus:true,
-			allowAddNewData: true,
+			allowAddNewData: !this.noDirectEntry,
 			preventDuplicates: false,
-			valueField: 'email'
+			valueField: 'email',
+			listeners: {
+				'newitem': function(superBoxSelect, newValue) {
+					superBoxSelect.addItem({
+						email: newValue
+					});
+				}
+			}
 		});
 		
 		var ccSuperBox = new Ext.ux.form.SuperBoxSelect({
@@ -99,7 +106,7 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 			triggerAction:'all',
 			// emptyText: 'Select an email',
 			selectOnFocus:true,
-			allowAddNewData: true,
+			allowAddNewData: !this.noDirectEntry,
 			preventDuplicates: false,
 			valueField: 'email'
 		});
