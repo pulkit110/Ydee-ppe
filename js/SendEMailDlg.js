@@ -14,22 +14,20 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 	noDirectEntry : true,
 	building: false,
 
+	//config options
+	owners:null,
+	user:null,
+	otherContacts:null,
+	mailSender:null,
+
 	initComponent: function() {
 
 		var emailDlg = this;
 
 		// Set default values to optional parameters of the configuration
 		Ext.applyIf(this.initialConfig, {
-
 		});
 
-		var clearForm = function() {
-			// Ext.getCmp('toTextField').setValue("");
-			// Ext.getCmp('ccTextField').setValue("");
-			Ext.getCmp('subjectTextField').setValue("");
-			Ext.getCmp('emailText').setValue("");
-			Ext.getCmp('keepCopyCheck').setValue(false);
-		};
 		var getIds = function() {
 
 		};
@@ -52,8 +50,7 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 		},{
 			name : 'email',
 			mapping: 'email'
-		}
-		];
+		}];
 
 		var emailRecords = new Array();
 
@@ -81,6 +78,16 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 			root   : 'records'
 		});
 
+		function isValidEmail(email) {
+			var status = false;
+			var emailRegEx = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+			if (email.search(emailRegEx) == -1) {
+				return false;
+				//alert("Please enter a valid email address.");
+			}
+			return true;
+		}
+
 		var toSuperBox = new Ext.ux.form.SuperBoxSelect({
 			x: 70,
 			y: 0,
@@ -96,9 +103,11 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 			valueField: 'email',
 			listeners: {
 				'newitem': function(superBoxSelect, newValue) {
-					superBoxSelect.addItem({
-						email: newValue
-					});
+					if (isValidEmail(newValue)) {
+						superBoxSelect.addItem({
+							email: newValue
+						});
+					}
 				}
 			}
 		});
@@ -118,14 +127,16 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 			valueField: 'email',
 			listeners: {
 				'newitem': function(superBoxSelect, newValue) {
-					superBoxSelect.addItem({
-						email: newValue
-					});
+					if (isValidEmail(newValue)) {
+						superBoxSelect.addItem({
+							email: newValue
+						});
+					}
 				}
 			}
 		});
 
-		var setToIds = function() {
+		function setToIds() {
 			var recipientSelDialog = new Ydee.RecipientSelDlg({
 				owners: emailDlg.owners,
 				user: emailDlg.user,
@@ -148,7 +159,8 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 			});
 			recipientSelDialogWindow .show();
 		};
-		var setCCIds = function() {
+
+		function setCCIds() {
 			var recipientSelDialog = new Ydee.RecipientSelDlg({
 				owners: emailDlg.owners,
 				user: emailDlg.user,
@@ -171,6 +183,7 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 			});
 			recipientSelDialogWindow .show();
 		};
+
 		function sendMail() {
 			var subject = Ext.getCmp('subjectTextField').getValue();
 			var emailText = Ext.getCmp('emailText').getValue();
@@ -216,6 +229,15 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 			}
 		}
 
+		function clearForm() {
+			toSuperBox.clearValue();
+			ccSuperBox.clearValue();
+			Ext.getCmp('ccTextField').setValue("");
+			Ext.getCmp('subjectTextField').setValue("");
+			Ext.getCmp('emailText').setValue("");
+			Ext.getCmp('keepCopyCheck').setValue(false);
+		};
+
 		// Prepare config
 		var config = {
 			title: 'New Email',
@@ -247,7 +269,6 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 			items: {
 				baseCls: 'x-plain',
 				layout:'absolute',
-				//url:'save-form.php',
 				border: true,
 				defaultType: 'textfield',
 
@@ -260,24 +281,14 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 					handler: setToIds,
 					scope: this
 				},
-				toSuperBox
-				,{
-					x: 70,
-					y: 0,
-					id: 'toTextField',
-					name: 'to',
-					anchor:'100%',
-					disabled: this.noDirectEntry,
-					hidden : this.noDirectEntry
-				},{
+				toSuperBox,{
 					x: 0,
 					y: 42,
 					width: 65,
 					xtype: 'button',
 					text: this.cc,
 					handler: setCCIds
-				}, ccSuperBox
-				,{
+				}, ccSuperBox,{
 					x: 10,
 					y: 77,
 					width: 65,
@@ -288,7 +299,7 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 					y: 74,
 					id: 'subjectTextField',
 					name: 'subject',
-					anchor: '100%'  // anchor width by %
+					anchor: '100%'
 				},{
 					x: 0,
 					y: 105,
@@ -301,7 +312,7 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 					id: 'emailText',
 					xtype: 'htmleditor',
 					name: 'msg',
-					anchor: '100% 100%'  // anchor width and height
+					anchor: '100% 100%'
 				}]
 			}
 		};
