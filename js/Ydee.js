@@ -1,4 +1,4 @@
-/**
+/**	
  *
  * @author    Pulkit Goyal
  *
@@ -19,106 +19,105 @@ Ext.onReady( function() {
 
 	var owners = [{
 		fname : "Fname1",
-		lname: "Goyal1",
+		lname: "Lname1",
 		bnumber : "0",
 		anumber : "0",
 		email : "abc1@xyz.com"
 	},{
-		fname : "Fname1",
-		lname: "Goyal2",
+		fname : "Fname2",
+		lname: "Lname2",
 		bnumber: "1",
 		anumber: "1",
 		email : "abc2@xyz.com"
 	},{
-		fname : "Fname1",
-		lname: "Goyal3",
+		fname : "Fname3",
+		lname: "Lname3",
 		bnumber : "2",
 		anumber : "2",
 		email : "abc3@xyz.com"
 	},{
-		fname : "Fname1",
-		lname: "Goyal4",
+		fname : "Fname4",
+		lname: "Lname4",
 		bnumber : "3",
 		anumber : "3",
 		email : "abc4@xyz.com"
 	},{
-		fname : "Fname1",
-		lname: "Goyal5",
+		fname : "Fname5",
+		lname: "Lname5",
 		bnumber : "4",
 		anumber : "4",
 		email : "abc5@xyz.com"
 	},{
-		fname : "Fname1",
-		lname: "Goyal6",
+		fname : "Fname6",
+		lname: "Lname6",
 		bnumber : "5",
 		anumber : "5",
 		email : "abc6@xyz.com"
 	},{
-		fname : "Fname1",
-		lname: "Goyal7",
+		fname : "Fname7",
+		lname: "Lname7",
 		bnumber : "6",
 		anumber : "6",
 		email : "abc7@xyz.com"
 	},{
-		fname : "Fname1",
-		lname: "Goyal8",
+		fname : "Fname8",
+		lname: "Lname8",
 		bnumber : "7",
 		anumber : "7",
 		email : "abc8@xyz.com"
 	},{
-		fname : "Fname1",
-		lname: "Goyal9",
+		fname : "Fname9",
+		lname: "Lname9",
 		bnumber : "8",
 		anumber : "8",
 		email : "abc9@xyz.com"
 	},{
-		fname : "Fname1",
-		lname: "Goyal0",
+		fname : "Fname10",
+		lname: "Lname10",
 		bnumber : "9",
 		anumber : "9",
 		email : "abc10@xyz.com"
 	}
 	];
 	var otherContacts = [{
-		fname : "Fname1",
-		lname: "Goyal11",
+		fname : "Fname11",
+		lname: "Lname11",
 		email : "abc@xyz11.com",
-		type : "admin"
+		type : "accountant"
 	},{
-		fname : "Fname1",
-		lname: "Goyal12",
+		fname : "Fname12",
+		lname: "Lname12",
 		email : "abc@xyz12.com",
 		type : "admin"
 	},{
-		fname : "Fname1",
-		lname: "Goyal13",
+		fname : "Fname13",
+		lname: "Lname13",
 		email : "abc@xyz13.com",
 		type : "admin"
 	},{
-		fname : "Fname1",
-		lname: "Goyal14",
+		fname : "Fname14",
+		lname: "Lname14",
 		email : "abc@xyz14.com",
 		type : "accountant"
 	},
 	];
 
 	var emailPanel = new Ydee.SendEmailDlg({
-		building : false,
+		building : true,
 		user : user,
 		owners : owners,
 		otherContacts:otherContacts,
 		noDirectEntry:false
 	});
-	// var recipientDlg = new Ydee.RecipientSelDlg();
 
 	var contentPanel = {
 		id: 'content-panel',
-		region: 'center', // this is what makes this panel into a region within the containing layout
+		region: 'center',
 		layout: 'card',
 		margins: '2 5 5 0',
 		activeItem: 0,
 		border: false,
-		items: emailPanel//recipientDlg
+		items: emailPanel
 	};
 
 	var viewport = new Ext.Viewport({
@@ -127,4 +126,4 @@ Ext.onReady( function() {
 		items: [contentPanel],
 		renderTo: Ext.getBody()
 	});
-}); // eo function onReady
+}); 
