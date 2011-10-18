@@ -57,8 +57,17 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 
 		var ownerRecords = new Array();
 
-		for (var i = 0; i < this.owners.length; ++i) {
-			ownerRecords[i] = this.owners[i];
+		if (this.owners != null) {
+			for (var i = 0; i < this.owners.length; ++i) {
+				ownerRecords[i] = this.owners[i];
+			}
+		}
+
+		if (this.otherContacts != null) {
+			var l = ownerRecords.length;
+			for (var i = 0; i < this.otherContacts.length; ++i) {
+				ownerRecords[l+i] = this.otherContacts[i];
+			}
 		}
 
 		var ownerData = {
@@ -81,7 +90,6 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 			displayField: 'email',
 			mode:'local',
 			triggerAction:'all',
-			// emptyText: 'Select an email',
 			selectOnFocus:true,
 			allowAddNewData: !this.noDirectEntry,
 			preventDuplicates: false,
@@ -94,7 +102,7 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 				}
 			}
 		});
-		
+
 		var ccSuperBox = new Ext.ux.form.SuperBoxSelect({
 			x: 70,
 			y: 37,
@@ -104,11 +112,17 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 			displayField: 'email',
 			mode:'local',
 			triggerAction:'all',
-			// emptyText: 'Select an email',
 			selectOnFocus:true,
 			allowAddNewData: !this.noDirectEntry,
 			preventDuplicates: false,
-			valueField: 'email'
+			valueField: 'email',
+			listeners: {
+				'newitem': function(superBoxSelect, newValue) {
+					superBoxSelect.addItem({
+						email: newValue
+					});
+				}
+			}
 		});
 
 		var setToIds = function() {
@@ -128,11 +142,13 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 			});
 
 			var recipientSelDialogWindow = new Ext.Window({
-				width:300,
-				items: recipientSelDialog
+				width:recipientSelDialog.getGridWidth(),
+				items: recipientSelDialog,
+				resizable:false
 			});
 			recipientSelDialogWindow .show();
 		};
+		
 		var setCCIds = function() {
 			var recipientSelDialog = new Ydee.RecipientSelDlg({
 				owners: emailDlg.owners,
@@ -150,8 +166,9 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 			});
 
 			var recipientSelDialogWindow = new Ext.Window({
-				width:300,
-				items: recipientSelDialog
+				width:recipientSelDialog.getGridWidth(),
+				items: recipientSelDialog,
+				resizable:false
 			});
 			recipientSelDialogWindow .show();
 		};
@@ -226,12 +243,12 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 					handler: setCCIds
 				}, ccSuperBox
 				// },{
-					// x: 70,
-					// y: 27,
-					// id: 'ccTextField',
-					// name: 'cc',
-					// anchor: '100%',
-					// disabled: this.noDirectEntry
+				// x: 70,
+				// y: 27,
+				// id: 'ccTextField',
+				// name: 'cc',
+				// anchor: '100%',
+				// disabled: this.noDirectEntry
 				,{
 					x: 10,
 					y: 77,

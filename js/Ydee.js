@@ -84,28 +84,29 @@ Ext.onReady( function() {
 		lname: "Goyal11",
 		email : "abc@xyz11.com",
 		type : "admin"
-	}, {
+	},{
 		fname : "Record 10",
 		lname: "Goyal12",
 		email : "abc@xyz12.com",
 		type : "admin"
-	}, {
+	},{
 		fname : "Record 11",
 		lname: "Goyal13",
 		email : "abc@xyz13.com",
 		type : "admin"
-	}, {
+	},{
 		fname : "Record 12",
 		lname: "Goyal14",
 		email : "abc@xyz14.com",
 		type : "accountant"
-	}, 
-	]; 
+	},
+	];
 
 	var emailPanel = new Ydee.SendEmailDlg({
 		building : false,
 		user : user,
-		owners : owners
+		owners : owners,
+		otherContacts:otherContacts
 	});
 	// var recipientDlg = new Ydee.RecipientSelDlg();
 

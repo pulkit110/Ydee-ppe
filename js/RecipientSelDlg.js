@@ -11,6 +11,10 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 	allOwnersBldg: 'All owners of building',
 	ok: 'Ok',
 	cancel: 'Cancel',
+	fnamestr: 'First Name',
+	lnamestr: 'Last Name',
+	bnumberstr: 'Building#',
+	anumberstr: 'Apartment#',
 
 	//options
 	building: false,
@@ -18,7 +22,7 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 	initComponent: function() {
 
 		var recipientSelDlg = this;
-		
+
 		// Set default values to optional parameters of the configuration
 		Ext.applyIf(this.initialConfig, {
 
@@ -36,18 +40,25 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 		},{
 			name: 'anumber',
 			mapping : 'anumber'
-		}, {
+		},{
 			name : 'email',
 			mapping: 'email'
 		}
 		];
 
 		var ownerRecords = new Array();
-		
+
 		for (var i = 0; i < this.owners.length; ++i) {
 			ownerRecords[i] = this.owners[i];
 		}
-		
+
+		if (this.otherContacts != null) {
+			var l = ownerRecords.length;
+			for (var i = 0; i < this.otherContacts.length; ++i) {
+				ownerRecords[l+i] = this.otherContacts[i];
+			}
+		}
+
 		var ownerData = {
 			records: ownerRecords
 		};
@@ -64,29 +75,29 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 		// Column Model shortcut array
 		var cols = [sm,{
 			id : 'fname',
-			header: "fname",
-			width: 160,
+			header: this.fnamestr,
+			autoWidth : true,
 			sortable: true,
 			dataIndex: 'fname'
 		},{
-			header: "lname",
-			width: 160,
+			header: this.lnamestr,
+			autoWidth : true,
 			sortable: true,
 			dataIndex: 'lname'
 		},{
-			header: "bnumber",
-			width: 50,
+			header: this.bnumberstr,
+			autoWidth : true,
 			sortable: true,
 			dataIndex: 'bnumber',
 			hidden:this.building
 		},{
-			header: "anumber",
-			width: 50,
+			header: this.anumberstr,
+			autoWidth : true,
 			sortable: true,
 			dataIndex: 'anumber'
 		},{
 			header: "email",
-			width: 50,
+			autoWidth : true,
 			dataIndex: 'email',
 			hidden:true
 		}
@@ -99,18 +110,71 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 			columns          : cols,
 			sm: sm,
 			stripeRows       : true,
-			// autoExpandColumn : 'fname',
-			width            : 650,
+			autoWidth: true,
 			height           : 325,
 			enableColumnHide: false
 		});
-		
+
+		this.getGridWidth = function() {
+			return 450;
+		};
 		var sendIds = function() {
 			var records = grid.getSelectionModel().getSelections();
 			recipientSelDlg.idsHandler(records);
 			recipientSelDlg.ownerCt.close();
 		};
-		
+		function selectAdminListener() {
+			var checked = this.getValue();
+			for (var i = 0; i < grid.getStore().getTotalCount(); ++i) {
+				var currRow = grid.getStore().getAt(i);
+				if (currRow.json.type == 'admin') {
+					if (checked)
+						grid.getSelectionModel().selectRow(i, true);
+					else
+						grid.getSelectionModel().deselectRow(i);
+				}
+			}
+		}
+
+		function selectAccountantListener() {
+			var checked = this.getValue();
+			for (var i = 0; i < grid.getStore().getTotalCount(); ++i) {
+				var currRow = grid.getStore().getAt(i);
+				if (currRow.json.type == 'accountant') {
+					if (checked)
+						grid.getSelectionModel().selectRow(i, true);
+					else
+						grid.getSelectionModel().deselectRow(i);
+				}
+			}
+		}
+
+		function selectAllOwnersListener() {
+			var checked = this.getValue();
+			for (var i = 0; i < grid.getStore().getTotalCount(); ++i) {
+				var currRow = grid.getStore().getAt(i);
+				if (currRow.json.bnumber != null || currRow.json.anumber != null) {
+					if (checked)
+						grid.getSelectionModel().selectRow(i, true);
+					else
+						grid.getSelectionModel().deselectRow(i);
+				}
+			}
+		}
+
+		function selectAllOwnersBldgListener() {
+			var checked = this.getValue();
+			for (var i = 0; i < grid.getStore().getTotalCount(); ++i) {
+				var currRow = grid.getStore().getAt(i);
+				if (currRow.json.bnumber == recipientSelDlg.user.bnumber) {
+					if (checked)
+						grid.getSelectionModel().selectRow(i, true);
+					else
+						grid.getSelectionModel().deselectRow(i);
+				}
+			}
+		}
+
 		// Prepare config
 		var config = {
 			title: this.title,
@@ -143,21 +207,13 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 					boxLabel: this.admin,
 					name:'admin',
 					listeners: {
-						check: function() {
-							var checked = this.getValue();
-							for (var i = 0; i < grid.getStore().getTotalCount(); ++i) {
-							}
-						}
+						check: selectAdminListener
 					}
 				},{
 					boxLabel: this.accountant,
 					name:'accountant',
 					listeners: {
-						check: function() {
-							var checked = this.getValue();
-							for (var i = 0; i < grid.getStore().getTotalCount(); ++i) {
-							}
-						}
+						check: selectAccountantListener
 					}
 				}]
 			},{
@@ -168,28 +224,14 @@ Ydee.RecipientSelDlg = Ext.extend(Ext.FormPanel, {
 					boxLabel: this.allOwners,
 					name:'allOwners',
 					listeners: {
-						check: function() {
-							var checked = this.getValue();
-							for (var i = 0; i < grid.getStore().getTotalCount(); ++i) {
-							}
-							if (checked) {
-								grid.getSelectionModel().selectAll();
-							} else {
-								grid.getSelectionModel().clearSelections();
-							}
-						}
+						check: selectAllOwnersListener
 					}
 				},{
 					hidden: this.building,
 					boxLabel: this.allOwnersBldg,
 					name:'allOwnersBld',
 					listeners: {
-						check: function() {
-							var checked = this.getValue();
-							for (var i = 0; i < grid.getStore().getTotalCount(); ++i) {
-								var temp = grid.getStore().getAt(i);
-							}
-						}
+						check: selectAllOwnersBldgListener
 					}
 				}]
 			},grid]
