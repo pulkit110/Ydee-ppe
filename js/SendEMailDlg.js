@@ -24,8 +24,8 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 		});
 
 		var clearForm = function() {
-			Ext.getCmp('toTextField').setValue("");
-			Ext.getCmp('ccTextField').setValue("");
+			// Ext.getCmp('toTextField').setValue("");
+			// Ext.getCmp('ccTextField').setValue("");
 			Ext.getCmp('subjectTextField').setValue("");
 			Ext.getCmp('emailText').setValue("");
 			Ext.getCmp('keepCopyCheck').setValue(false);
@@ -55,23 +55,23 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 		}
 		];
 
-		var ownerRecords = new Array();
+		var emailRecords = new Array();
 
 		if (this.owners != null) {
 			for (var i = 0; i < this.owners.length; ++i) {
-				ownerRecords[i] = this.owners[i];
+				emailRecords[i] = this.owners[i];
 			}
 		}
 
 		if (this.otherContacts != null) {
-			var l = ownerRecords.length;
+			var l = emailRecords.length;
 			for (var i = 0; i < this.otherContacts.length; ++i) {
-				ownerRecords[l+i] = this.otherContacts[i];
+				emailRecords[l+i] = this.otherContacts[i];
 			}
 		}
 
 		var ownerData = {
-			records: ownerRecords
+			records: emailRecords
 		};
 
 		// create the data store
@@ -148,7 +148,6 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 			});
 			recipientSelDialogWindow .show();
 		};
-		
 		var setCCIds = function() {
 			var recipientSelDialog = new Ydee.RecipientSelDlg({
 				owners: emailDlg.owners,
@@ -172,6 +171,51 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 			});
 			recipientSelDialogWindow .show();
 		};
+		function sendMail() {
+			var subject = Ext.getCmp('subjectTextField').getValue();
+			var emailText = Ext.getCmp('emailText').getValue();
+			var keepCopy = Ext.getCmp('keepCopyCheck').getValue();
+			var senderEmail = emailDlg.user.email;
+
+			var toValuesEx = toSuperBox.getValueEx();
+			var ccValuesEx = ccSuperBox.getValueEx();
+
+			var toRecipients = new Array();
+			for (var i = 0; i < toValuesEx.length; ++i) {
+				for (var j = 0; j < emailRecords.length; ++j) {
+					if (emailRecords[j].email == toValuesEx[i].email) {
+						toValuesEx[i].fname = emailRecords[j].fname;
+						toValuesEx[i].lname = emailRecords[j].lname;
+						break;
+					}
+				}
+				toRecipients[i] = toValuesEx[i];
+			}
+
+			var ccRecipients = new Array();
+			for (var i = 0; i < ccValuesEx.length; ++i) {
+				for (var j = 0; j < emailRecords.length; ++j) {
+					if (emailRecords[j].email == ccValuesEx[i].email) {
+						ccValuesEx[i].fname = emailRecords[j].fname;
+						ccValuesEx[i].lname = emailRecords[j].lname;
+						break;
+					}
+				}
+				ccRecipients[i] = ccValuesEx[i];
+			}
+
+			if (emailDlg.mailSender != null) {
+				emaiDlg.mailSender({
+					toRecipients: toRecipients,
+					ccRecipients: ccRecipients,
+					subject: subject,
+					emailText: emailText,
+					keepCopy: keepCopy,
+					senderEmail: senderEmail
+				});
+			}
+		}
+
 		// Prepare config
 		var config = {
 			title: 'New Email',
@@ -190,7 +234,8 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 				'->',{
 					width: 65,
 					xtype: 'button',
-					text: this.send
+					text: this.send,
+					handler: sendMail
 				},
 				' ',{
 					width: 65,
@@ -216,16 +261,6 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 					scope: this
 				},
 				toSuperBox
-				// {
-				// xtype: 'panel',
-				// x: 70,
-				// y: 8,
-				// id:'toFieldDiv',
-				// anchor: '100%',
-				// autoWidth: true
-				// width: 300,
-				// height: 5
-				// }
 				,{
 					x: 70,
 					y: 0,
@@ -242,13 +277,6 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 					text: this.cc,
 					handler: setCCIds
 				}, ccSuperBox
-				// },{
-				// x: 70,
-				// y: 27,
-				// id: 'ccTextField',
-				// name: 'cc',
-				// anchor: '100%',
-				// disabled: this.noDirectEntry
 				,{
 					x: 10,
 					y: 77,
