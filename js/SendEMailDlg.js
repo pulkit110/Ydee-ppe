@@ -232,7 +232,6 @@ Ydee.SendEmailDlg = Ext.extend(Ext.FormPanel, {
 		function clearForm() {
 			toSuperBox.clearValue();
 			ccSuperBox.clearValue();
-			Ext.getCmp('ccTextField').setValue("");
 			Ext.getCmp('subjectTextField').setValue("");
 			Ext.getCmp('emailText').setValue("");
 			Ext.getCmp('keepCopyCheck').setValue(false);
