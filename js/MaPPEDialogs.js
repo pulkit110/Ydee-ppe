@@ -1,15 +1,14 @@
 Ext.ns('MaPPE');
 
 Ext.apply(Ext.form.VTypes, {
-    password : function(val, field) {
-        if (field.initialPassField) {
-            var pwd = Ext.getCmp(field.initialPassField);
-            return (val == pwd.getValue());
-        }
-        return true;
-    },
-
-    passwordText : 'Passwords do not match.'
+	password : function(val, field) {
+		if (field.initialPassField) {
+			var pwd = Ext.getCmp(field.initialPassField);
+			return (val == pwd.getValue());
+		}
+		return true;
+	},
+	passwordText : 'Passwords do not match.'
 });
 
 MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
@@ -21,7 +20,7 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 	currentPassword: 'Current password',
 	newPassword: 'New password',
 	confirmNewPassword: 'Confirm new password',
-	
+
 	//Options
 	noDirectEntry : true,
 	building: false,
@@ -40,7 +39,7 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 
 		// Prepare config
 		var config = {
-			title: this.title,		
+			title: this.title,
 			layout: 'fit',
 			frame: true,
 			bodyStyle: 'padding:10px 5px 5px;',
@@ -70,14 +69,14 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 					fieldLabel: this.currentPassword,
 					xType: 'textfield',
 					border : false,
-					inputType: 'password',									
+					inputType: 'password',
 					anchor : '100%'
 				},{
 					fieldLabel: this.newPassword,
 					id: 'passwd',
 					xType: 'textfield',
-					border : false,					
-					inputType: 'password',					
+					border : false,
+					inputType: 'password',
 					anchor : '100%'
 				},{
 					fieldLabel: this.confirmNewPassword,
@@ -101,12 +100,15 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 MaPPE.lostPasswordDlg = Ext.extend(Ext.FormPanel, {
 
 	// Translatable strings...
-	title: 'Lost Password',
-	lostPasswd: 'Lost password',
-	lostEmptyText: 'Email',
+	title: 'Change Password',
 	ok: 'Ok',
 	cancel: 'Cancel',
-	email: 'Enter Email-id',
+	emailId: 'E-mail Address',
+	message: 'In order to receive a new password, please enter your email address below and press OK</br></br>',
+
+	//Options
+	noDirectEntry : true,
+	building: false,
 
 	//config options
 	owners:null,
@@ -123,7 +125,6 @@ MaPPE.lostPasswordDlg = Ext.extend(Ext.FormPanel, {
 		// Prepare config
 		var config = {
 			title: this.title,
-			cls: 'lost-password-form',
 			layout: 'fit',
 			frame: true,
 			bodyStyle: 'padding:10px 5px 5px;',
@@ -144,15 +145,26 @@ MaPPE.lostPasswordDlg = Ext.extend(Ext.FormPanel, {
 				}]
 			},
 
-			items: [{
-				fieldLabel: this.oldPassword,
-				xType: 'textfield',
-				border : false,
-				vtype : 'email',
-				emptyText : this.lostEmtptyText,
-				anchor : '100%',
-				allowBlank : false
-			}]
+			items: {
+				baseCls: 'x-plain',
+				layout:'form',
+				border: true,
+				defaultType: 'textfield',
+				items: [{
+					xtype: 'box',
+					autoEl: {
+						cn: this.message 
+					}
+				},{
+					fieldLabel: this.emailId,
+					xType: 'textfield',
+					border : false,
+					vtype : 'email',					
+					anchor : '100%'
+				}]
+
+			}
+
 		};
 
 		// Apply config and call base class
