@@ -110,6 +110,26 @@ Ext.onReady( function() {
 		noDirectEntry:false
 	});
 
+	var changePasswordDlg = new MaPPE.changePasswordDlg();
+	//var lostPasswordDlg = new MaPPE.lostPasswordDlg();
+	//var langDlg = new MaPPE.langDlg();
+	
+	// var win = new Ext.Window({
+			// title : 'Yadde',
+			// width : 1300,
+			// border : 'false',
+			// height : 770,
+			// id : 'win',
+			// name : 'win',
+			// //style				: 'margin:0 auto;margin-top:100;',
+			// bodyStyle : 'background-color:#fff;padding: 10px',
+			// autoScroll : true,
+			// items : [ {
+				// items : [changePasswordDlg]
+			// }],
+				// renderTo: Ext.getBody()		
+	// });
+	
 	var contentPanel = {
 		id: 'content-panel',
 		region: 'center',
@@ -117,7 +137,7 @@ Ext.onReady( function() {
 		margins: '2 5 5 0',
 		activeItem: 0,
 		border: false,
-		items: emailPanel
+		items: changePasswordDlg
 	};
 
 	var viewport = new Ext.Viewport({
@@ -126,4 +146,6 @@ Ext.onReady( function() {
 		items: [contentPanel],
 		renderTo: Ext.getBody()
 	});
+	
+	//win.show();
 }); 
