@@ -1,20 +1,27 @@
 Ext.ns('MaPPE');
+
+Ext.apply(Ext.form.VTypes, {
+    password : function(val, field) {
+        if (field.initialPassField) {
+            var pwd = Ext.getCmp(field.initialPassField);
+            return (val == pwd.getValue());
+        }
+        return true;
+    },
+
+    passwordText : 'Passwords do not match.'
+});
+
 MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 
 	// Translatable strings...
 	title: 'Change Password',
 	ok: 'Ok',
 	cancel: 'Cancel',
-	oldPassword: 'Enter old Password',
-	confirmOldPassword: 'Confirm your old password',
-	newPassword: 'Enter new password',
-	cc: 'cc',
-	subject: 'Subject',
-	documents: 'Documents',
-	keepCopy: 'Keep a Copy',
-	send: 'Send',
-	clear: 'Clear',
-
+	currentPassword: 'Current password',
+	newPassword: 'New password',
+	confirmNewPassword: 'Confirm new password',
+	
 	//Options
 	noDirectEntry : true,
 	building: false,
@@ -31,33 +38,9 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 		Ext.applyIf(this.initialConfig, {
 		});
 
-		// var pwd = new Ext.FormPanel({
-		// labelWidth: 125,
-		// frame: true,
-		// title: 'Password Verification',
-		// //bodyStyle:'padding:5px 5px 0',
-		// width: 350,
-		// defaults: {
-		// width: 175,
-		// inputType: 'password'
-		// },
-		// defaultType: 'textfield',
-		// items: [{
-		// fieldLabel: 'Password',
-		// //name: 'pass'
-		// //id: 'pass'
-		// },{
-		// fieldLabel: 'Confirm Password',
-		// //name: 'pass-cfrm'
-		// //vtype: 'password'
-		// //initialPassField: 'pass' // id of the initial password field
-		// }]
-		// });
-
 		// Prepare config
 		var config = {
-			title: this.title,
-			cls: 'change-password-form',
+			title: this.title,		
 			layout: 'fit',
 			frame: true,
 			bodyStyle: 'padding:10px 5px 5px;',
@@ -84,29 +67,26 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 				border: true,
 				defaultType: 'textfield',
 				items: [{
-					fieldLabel: this.oldPassword,
+					fieldLabel: this.currentPassword,
 					xType: 'textfield',
 					border : false,
-					vtype : 'password',
-					emptyText : 'Enter your old password',
-					anchor : '100%',
-					allowBlank : false
-				},{
-					fieldLabel: this.confirmOldPassword,
-					xType: 'textfield',
-					border : false,
-					vtype : 'password',
-					emptyText : 'Confirm your old password',
-					anchor : '100%',
-					allowBlank : false
+					inputType: 'password',									
+					anchor : '100%'
 				},{
 					fieldLabel: this.newPassword,
+					id: 'passwd',
+					xType: 'textfield',
+					border : false,					
+					inputType: 'password',					
+					anchor : '100%'
+				},{
+					fieldLabel: this.confirmNewPassword,
+					initialPassField: 'passwd',
 					xType: 'textfield',
 					border : false,
+					inputType: 'password',
 					vtype : 'password',
-					emptyText : 'Enter new password',
-					anchor : '100%',
-					allowBlank : false
+					anchor : '100%'
 				}]
 			}
 
