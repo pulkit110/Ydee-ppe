@@ -21,16 +21,6 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 	newPassword: 'New password',
 	confirmNewPassword: 'Confirm new password',
 
-	//Options
-	noDirectEntry : true,
-	building: false,
-
-	//config options
-	owners:null,
-	user:null,
-	otherContacts:null,
-	mailSender:null,
-
 	initComponent: function() {
 
 		// Set default values to optional parameters of the configuration
@@ -100,21 +90,11 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 MaPPE.lostPasswordDlg = Ext.extend(Ext.FormPanel, {
 
 	// Translatable strings...
-	title: 'Change Password',
+	title: 'Lost Password',
 	ok: 'Ok',
 	cancel: 'Cancel',
 	emailId: 'E-mail Address',
 	message: 'In order to receive a new password, please enter your email address below and press OK</br></br>',
-
-	//Options
-	noDirectEntry : true,
-	building: false,
-
-	//config options
-	owners:null,
-	user:null,
-	otherContacts:null,
-	mailSender:null,
 
 	initComponent: function() {
 
@@ -153,13 +133,13 @@ MaPPE.lostPasswordDlg = Ext.extend(Ext.FormPanel, {
 				items: [{
 					xtype: 'box',
 					autoEl: {
-						cn: this.message 
+						cn: this.message
 					}
 				},{
 					fieldLabel: this.emailId,
 					xType: 'textfield',
 					border : false,
-					vtype : 'email',					
+					vtype : 'email',
 					anchor : '100%'
 				}]
 
@@ -173,18 +153,14 @@ MaPPE.lostPasswordDlg = Ext.extend(Ext.FormPanel, {
 	},
 });
 
-MaPPE.selectLanguageDlg = Ext.extend(Ext.FormPanel, {
+MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 
 	// Translatable strings...
 	title: 'Select Language',
 	ok: 'Ok',
 	cancel: 'Cancel',
-
-	//config options
-	owners:null,
-	user:null,
-	otherContacts:null,
-	mailSender:null,
+	lang:'Language',
+	message: 'Select your Language</br></br>',
 
 	initComponent: function() {
 
@@ -192,10 +168,25 @@ MaPPE.selectLanguageDlg = Ext.extend(Ext.FormPanel, {
 		Ext.applyIf(this.initialConfig, {
 		});
 
-		// Prepare config
+		var languageDataStore = new Ext.data.Store({
+			proxy: new Ext.data.ScriptTagProxy({
+				//type:'jsonp',
+				url: 'http://pulkitgoyal.in/Language.php'
+			}),
+			reader: new Ext.data.JsonReader({
+				root: "languages",
+				fields: [{
+					name: 'language',
+					mapping: 'language',
+					type: 'string'
+				}]
+			})
+		});
+
+		// var a = languageDataStore.language;
+
 		var config = {
 			title: this.title,
-			cls: 'lost-password-form',
 			layout: 'fit',
 			frame: true,
 			bodyStyle: 'padding:10px 5px 5px;',
@@ -216,95 +207,38 @@ MaPPE.selectLanguageDlg = Ext.extend(Ext.FormPanel, {
 				}]
 			},
 
-			items: [{
-				xtype:"combo",
-				store : langStore,
-				mode : 'local',
-				//forceSelection : true,
-				//allowBlank : false,
-				fieldLabel : 'Select a Language',
-				//resizable : true,
-				//name : 'sources',
-				//anchor : '85%',
-				displayField : 'sources',
-				emptyText : 'Select a Source',
-				//valueField : 'id',
-				listeners : {
-					select : function(f, record, index) {
-						selectLanguagePage();
+			items: {
+				baseCls: 'x-plain',
+				layout:'form',
+				border: true,
+				//defaultType: 'textfield',
+				items: [{
+					xtype: 'combo',
+					//id: 'countryCmb',
+					fieldLabel: 'Country',
+					//hiddenName: 'ddi_country',
+					//emptyText: 'Select a country...',
+					//headers: {'Content-type':'application/x-json'},
+					store: languageDataStore,
+					displayField: 'language',
+					//valueField: 'language',
+					selectOnFocus: true,
+					mode: 'remote',
+					//typeAhead: true,
+					//editable: false,
+					triggerAction: 'all',
+					//value: 'GB',
+					listeners: {
+						select: {
+							fn: function(combo, value) {
+								alert(value.json.language);
+							}
+						}
 					}
-				}
-			}]
-		};
-
-		// Apply config and call base class
-		Ext.apply(this, Ext.apply(this.initialConfig, config));
-		MaPPE.changePasswordDlg.superclass.initComponent.apply(this, arguments);
-	},
-});
-
-MaPPE.changePersonalInfoDlg = Ext.extend(Ext.FormPanel, {
-
-	// Translatable strings...
-	title: 'Update Personal Information',
-	ok: 'Ok',
-	cancel: 'Cancel',
-
-	//config options
-	owners:null,
-	user:null,
-	otherContacts:null,
-	mailSender:null,
-
-	initComponent: function() {
-
-		// Set default values to optional parameters of the configuration
-		Ext.applyIf(this.initialConfig, {
-		});
-
-		// Prepare config
-		var config = {
-			title: this.title,
-			cls: 'lost-password-form',
-			layout: 'fit',
-			frame: true,
-			bodyStyle: 'padding:10px 5px 5px;',
-			defailtType: 'textfield',
-			bbar: {
-				items: [
-				'->',{
-					width: 65,
-					xtype: 'button',
-					text: this.ok
-					//handler: sendMail
-				},
-				' ',{
-					width: 65,
-					xtype: 'button',
-					text: this.cancel
-					//handler: clearForm
 				}]
-			},
 
-			items: [{
-				xtype:"combo",
-				store : langStore,
-				mode : 'local',
-				//forceSelection : true,
-				//allowBlank : false,
-				fieldLabel : 'Select a Language',
-				//resizable : true,
-				//name : 'sources',
-				//anchor : '85%',
-				displayField : 'sources',
-				emptyText : 'Select a Source',
-				//valueField : 'id',
-				listeners : {
-					select : function(f, record, index) {
-						selectLanguagePage();
-					}
-				}
-			}]
+			}
+
 		};
 
 		// Apply config and call base class
