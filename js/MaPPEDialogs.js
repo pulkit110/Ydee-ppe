@@ -142,9 +142,7 @@ MaPPE.lostPasswordDlg = Ext.extend(Ext.FormPanel, {
 					vtype : 'email',
 					anchor : '100%'
 				}]
-
 			}
-
 		};
 
 		// Apply config and call base class
@@ -192,11 +190,7 @@ MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 				mapping: 'language',
 				type: 'string'
 			}]
-			//type: 'json'
-			//data   : ownerData,
 		});
-		
-		
 
 		var config = {
 			title: this.title,
@@ -224,7 +218,6 @@ MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 				baseCls: 'x-plain',
 				layout:'form',
 				border: true,
-				//defaultType: 'textfield',
 				items: [
 				// {
 				// xtype: 'box',
@@ -241,7 +234,6 @@ MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 					selectOnFocus: true,
 					mode: 'local',
 					triggerAction: 'all',
-					//value: 'GB',
 					listeners: {
 						select: {
 							fn: function(combo, value) {
@@ -270,20 +262,18 @@ MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 						}
 					}
 				}]
-
 			}
-
 		};
-		
+
 		Ext.Ajax.request({
-			//url : 'http://demo.ma-ppe.ch/YAjax.Test-SetLanguage',
+			//url : 'http://demo.ma-ppe.ch/YAjax.Test-GetLanguage'
 			autoLoad: true,
 			url : 'server/getLanguage.php',
 			method : 'GET',
 
 			scope : this,
 
-			success : function(response) {				
+			success : function(response) {
 				languageDataStore.loadData(Ext.decode(response.responseText));
 				Ext.getCmp('languageCombo').setValue(Ext.decode(response.responseText).current);
 			},
@@ -291,6 +281,193 @@ MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 				alert(this.errorMessage);
 			}
 		});
+
+		// Apply config and call base class
+		Ext.apply(this, Ext.apply(this.initialConfig, config));
+		MaPPE.changePasswordDlg.superclass.initComponent.apply(this, arguments);
+	},
+});
+
+MaPPE.personalInfoDlg = Ext.extend(Ext.FormPanel, {
+
+	// Translatable strings...
+	title: 'Update personal information',
+	ok: 'Ok',
+	cancel: 'Cancel',
+	message: 'Update your personal information</br></br>',
+	errorMessage:'An unexpected error occured! Please try again later!',
+
+	labelFirstName:'First Name',
+	labelLastName:'Last Name',
+	labelAddress:'Address',
+	labelZip: 'Zip',
+	labelCity:'City',
+	labelPhonePrivate:'Private Phone#',
+	labelPhoneProfessionals:'Professional Phone#',
+	labelMobile:'Mobile#',
+	labelFax:'Fax',
+	labelEmailId:'Email Address',
+
+	initComponent: function() {
+
+		// Set default values to optional parameters of the configuration
+		Ext.applyIf(this.initialConfig, {
+		});
+
+		var config = {
+			title: this.title,
+			layout: 'fit',
+			frame: true,
+			bodyStyle: 'padding:10px 5px 5px;',
+			defailtType: 'textfield',
+			bbar: {
+				items: [
+				'->',{
+					width: 65,
+					xtype: 'button',
+					text: this.ok,
+					handler: updateInfo
+				},
+				' ',{
+					width: 65,
+					xtype: 'button',
+					text: this.cancel
+					//handler: clearForm
+				}]
+			},
+
+			items: {
+				baseCls: 'x-plain',
+				layout:'form',
+				border: true,
+				defaultType: 'textfield',
+				items: [{
+					xtype: 'box',
+					autoEl: {
+						cn: this.message
+					}
+				},{
+					id : 'firstname',
+					fieldLabel: this.labelFirstName,
+					xType: 'textfield',
+					border : false,
+					anchor : '100%'
+				},{
+					id : 'lastname',
+					fieldLabel: this.labelLastName,
+					xType: 'textfield',
+					border : false,
+					anchor : '100%'
+				},{
+					id : 'address',
+					fieldLabel: this.labelAddress,
+					xType: 'textfield',
+					border : false,
+					anchor : '100%'
+				},{
+					id : 'zip',
+					fieldLabel: this.labelZip,
+					xType: 'textfield',
+					border : false,
+					anchor : '100%'
+				},{
+					id : 'city',
+					fieldLabel: this.labelCity,
+					xType: 'textfield',
+					border : false,
+					anchor : '100%'
+				},{
+					id : 'private',
+					fieldLabel: this.labelPhonePrivate,
+					xType: 'textfield',
+					border : false,
+					anchor : '100%'
+				},{
+					id : 'professional',
+					fieldLabel: this.labelPhoneProfessionals,
+					xType: 'textfield',
+					border : false,
+					anchor : '100%'
+				},{
+					id : 'mobile',
+					fieldLabel: this.labelMobile,
+					xType: 'textfield',
+					border : false,
+					anchor : '100%'
+				},{
+					id : 'fax',
+					fieldLabel: this.labelFax,
+					xType: 'textfield',
+					border : false,
+					anchor : '100%'
+				},{
+					id : 'email',
+					fieldLabel: this.labelEmailId,
+					xType: 'textfield',
+					border : false,
+					vtype :'email',
+					anchor : '100%'
+				}]
+			}
+		};
+
+		Ext.Ajax.request({
+			//url : 'https://demo.ma-ppe.ch/YAjax.Test-GetPersonalData'
+			autoLoad: true,
+			url : 'server/personalInfo.php',
+			method : 'GET',
+
+			scope : this,
+
+			success : function(response) {
+				Ext.getCmp('address').setValue(Ext.decode(response.responseText).address);
+				Ext.getCmp('city').setValue(Ext.decode(response.responseText).city);
+				Ext.getCmp('email').setValue(Ext.decode(response.responseText).email);
+				Ext.getCmp('fax').setValue(Ext.decode(response.responseText).fax);
+				Ext.getCmp('firstname').setValue(Ext.decode(response.responseText).firstName);
+				Ext.getCmp('lastname').setValue(Ext.decode(response.responseText).lastName);
+				Ext.getCmp('mobile').setValue(Ext.decode(response.responseText).mobile);
+				Ext.getCmp('private').setValue(Ext.decode(response.responseText).phonePrivate);
+				Ext.getCmp('professional').setValue(Ext.decode(response.responseText).phoneProfessional);
+				Ext.getCmp('zip').setValue(Ext.decode(response.responseText).zip);
+			},
+			failure: function (response) {
+				alert(this.errorMessage);
+			}
+		});
+
+		function updateInfo (btn) {
+			Ext.Ajax.request({
+				//url : 'http://demo.ma-ppe.ch/YAjax.Test-SetPersonalData'
+				autoLoad: true,
+				url : 'server/test.php',
+				method : 'GET',
+				params : {
+					firstName 	: Ext.getCmp('firstname').getValue(),
+					lastName 	: Ext.getCmp('lastname').getValue(),
+					address 	: Ext.getCmp('address').getValue(),
+					zip			: Ext.getCmp('zip').getValue(),
+					city		: Ext.getCmp('city').getValue(),
+					privatePhone: Ext.getCmp('private').getValue(),
+					mobile		: Ext.getCmp('mobile').getValue(),
+					fax			: Ext.getCmp('fax').getValue(),
+					email		: Ext.getCmp('email').getValue(),
+					professionalPhone	: Ext.getCmp('professional').getValue()
+				},
+				scope : this,
+
+				success : function(response) {
+					if (response.responseText == "") {
+
+					} else {
+						alert(response.responseText);
+					}
+				},
+				failure: function (response) {
+					alert(this.errorMessage);
+				}
+			});
+		}
 
 		// Apply config and call base class
 		Ext.apply(this, Ext.apply(this.initialConfig, config));
