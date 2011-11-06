@@ -292,9 +292,9 @@ MaPPE.personalInfoDlg = Ext.extend(Ext.FormPanel, {
 
 	// Translatable strings...
 	title: 'Update personal information',
-	ok: 'Ok',
+	update: 'Update',
 	cancel: 'Cancel',
-	message: 'Update your personal information</br></br>',
+	message: '<font size=\'2\'><b>Update your personal information</br></br></b></font>',
 	errorMessage:'An unexpected error occured! Please try again later!',
 
 	labelFirstName:'First Name',
@@ -325,7 +325,7 @@ MaPPE.personalInfoDlg = Ext.extend(Ext.FormPanel, {
 				'->',{
 					width: 65,
 					xtype: 'button',
-					text: this.ok,
+					text: this.update,
 					handler: updateInfo
 				},
 				' ',{
