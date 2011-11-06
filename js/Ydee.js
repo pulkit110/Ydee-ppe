@@ -110,26 +110,8 @@ Ext.onReady( function() {
 		noDirectEntry:false
 	});
 
-	var changePasswordDlg = new MaPPE.changePasswordDlg();
-	//var lostPasswordDlg = new MaPPE.lostPasswordDlg();
-	//var langDlg = new MaPPE.langDlg();
-	
-	// var win = new Ext.Window({
-			// title : 'Yadde',
-			// width : 1300,
-			// border : 'false',
-			// height : 770,
-			// id : 'win',
-			// name : 'win',
-			// //style				: 'margin:0 auto;margin-top:100;',
-			// bodyStyle : 'background-color:#fff;padding: 10px',
-			// autoScroll : true,
-			// items : [ {
-				// items : [changePasswordDlg]
-			// }],
-				// renderTo: Ext.getBody()		
-	// });
-	
+	var changePasswordDlg = new MaPPE.selectLangDlg();
+		
 	var contentPanel = {
 		id: 'content-panel',
 		region: 'center',

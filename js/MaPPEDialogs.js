@@ -161,6 +161,8 @@ MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 	cancel: 'Cancel',
 	lang:'Language',
 	message: 'Select your Language</br></br>',
+	fieldLabel:'Language',
+	errorMessage:'An unexpected error occured! Please try again later!',
 
 	initComponent: function() {
 
@@ -168,22 +170,33 @@ MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 		Ext.applyIf(this.initialConfig, {
 		});
 
-		var languageDataStore = new Ext.data.Store({
-			proxy: new Ext.data.ScriptTagProxy({
-				//type:'jsonp',
-				url: 'http://pulkitgoyal.in/Language.php'
-			}),
-			reader: new Ext.data.JsonReader({
-				root: "languages",
-				fields: [{
-					name: 'language',
-					mapping: 'language',
-					type: 'string'
-				}]
-			})
-		});
+		/*var languageDataStore = new Ext.data.Store({
+		proxy: new Ext.data.ScriptTagProxy({
+		url: 'http://pulkitgoyal.in/Language.php'
+		}),
+		reader: new Ext.data.JsonReader({
+		root: "languages",
+		fields: [{
+		name: 'language',
+		mapping: 'language',
+		type: 'string'
+		}]
+		})
+		});*/
 
-		// var a = languageDataStore.language;
+		// create the data store
+		var languageDataStore = new Ext.data.JsonStore({
+			root: "languages",
+			fields: [{
+				name: 'language',
+				mapping: 'language',
+				type: 'string'
+			}]
+			//type: 'json'
+			//data   : ownerData,
+		});
+		
+		
 
 		var config = {
 			title: this.title,
@@ -212,26 +225,47 @@ MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 				layout:'form',
 				border: true,
 				//defaultType: 'textfield',
-				items: [{
+				items: [
+				// {
+				// xtype: 'box',
+				// autoEl: {
+				// cn: this.message
+				// }
+				// },
+				{
 					xtype: 'combo',
-					//id: 'countryCmb',
-					fieldLabel: 'Country',
-					//hiddenName: 'ddi_country',
-					//emptyText: 'Select a country...',
-					//headers: {'Content-type':'application/x-json'},
+					id: 'languageCombo',
+					fieldLabel: this.fieldLabel,
 					store: languageDataStore,
 					displayField: 'language',
-					//valueField: 'language',
 					selectOnFocus: true,
-					mode: 'remote',
-					//typeAhead: true,
-					//editable: false,
+					mode: 'local',
 					triggerAction: 'all',
 					//value: 'GB',
 					listeners: {
 						select: {
 							fn: function(combo, value) {
-								alert(value.json.language);
+								//alert(value.json.language);
+								Ext.Ajax.request({
+									//url : 'http://demo.ma-ppe.ch/YAjax.Test-SetLanguage',
+									url : 'server/test.php',
+									method : 'GET',
+									params : {
+										language : value.json.language
+									},
+									scope : this,
+
+									success : function(response) {
+										if (response.responseText == "") {
+
+										} else {
+											alert(response.responseText);
+										}
+									},
+									failure: function (response) {
+										alert(this.errorMessage);
+									}
+								});
 							}
 						}
 					}
@@ -240,6 +274,23 @@ MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 			}
 
 		};
+		
+		Ext.Ajax.request({
+			//url : 'http://demo.ma-ppe.ch/YAjax.Test-SetLanguage',
+			autoLoad: true,
+			url : 'server/getLanguage.php',
+			method : 'GET',
+
+			scope : this,
+
+			success : function(response) {				
+				languageDataStore.loadData(Ext.decode(response.responseText));
+				Ext.getCmp('languageCombo').setValue(Ext.decode(response.responseText).current);
+			},
+			failure: function (response) {
+				alert(this.errorMessage);
+			}
+		});
 
 		// Apply config and call base class
 		Ext.apply(this, Ext.apply(this.initialConfig, config));
