@@ -14,6 +14,7 @@ Ext.apply(Ext.form.VTypes, {
 MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 
 	// Translatable strings...
+	id : 'id-changepasswd',
 	title: 'Change Password',
 	ok: 'Ok',
 	cancel: 'Cancel',
@@ -27,11 +28,12 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 		// Set default values to optional parameters of the configuration
 		Ext.applyIf(this.initialConfig, {
 		});
-		
+
 		changePasswordDlg = this;
 
 		// Prepare config
 		var config = {
+			id : this.id,
 			title: this.title,
 			layout: 'fit',
 			frame: true,
@@ -48,8 +50,8 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 				' ',{
 					width: 65,
 					xtype: 'button',
-					text: this.cancel
-					//handler: clearForm
+					text: this.cancel,
+					handler: cancel
 				}]
 			},
 
@@ -106,16 +108,21 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 
 				success : function(response) {
 					if (response.responseText == "") {
-						
+
 					} else {
 						alert(response.responseText);
 					}
-					
+
 				},
 				failure: function (response) {
 					alert(this.errorMessage);
 				}
 			});
+		}
+
+		function cancel (btn) {
+			var temo = 		Ext.getCmp('id-changepasswd');
+			Ext.getCmp('id-changepasswd').expand(false);
 		}
 
 		// Apply config and call base class
@@ -728,6 +735,7 @@ MaPPE.userDlg = Ext.extend(Ext.FormPanel, {
 		var config = {
 			layout: 'accordion',
 			title: '',
+			bodyStyle: 'background-color:#DFE8F6',
 			layoutConfig: {
 				// animate: true
 			},
