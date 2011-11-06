@@ -110,7 +110,7 @@ Ext.onReady( function() {
 		noDirectEntry:false
 	});
 
-	var changePasswordDlg = new MaPPE.personalInfoDlg();
+	var changePasswordDlg = new MaPPE.userDlg();
 		
 	var contentPanel = {
 		id: 'content-panel',

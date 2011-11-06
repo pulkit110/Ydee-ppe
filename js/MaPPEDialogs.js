@@ -20,12 +20,15 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 	currentPassword: 'Current password',
 	newPassword: 'New password',
 	confirmNewPassword: 'Confirm new password',
+	passwordError: 'Passwords do not match.',
 
 	initComponent: function() {
 
 		// Set default values to optional parameters of the configuration
 		Ext.applyIf(this.initialConfig, {
 		});
+		
+		changePasswordDlg = this;
 
 		// Prepare config
 		var config = {
@@ -39,8 +42,8 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 				'->',{
 					width: 65,
 					xtype: 'button',
-					text: this.ok
-					//handler: sendMail
+					text: this.ok,
+					handler: updatePassword
 				},
 				' ',{
 					width: 65,
@@ -57,6 +60,7 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 				defaultType: 'textfield',
 				items: [{
 					fieldLabel: this.currentPassword,
+					id : 'curpass',
 					xType: 'textfield',
 					border : false,
 					inputType: 'password',
@@ -70,6 +74,7 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 					anchor : '100%'
 				},{
 					fieldLabel: this.confirmNewPassword,
+					id : 'passwd1',
 					initialPassField: 'passwd',
 					xType: 'textfield',
 					border : false,
@@ -80,6 +85,38 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 			}
 
 		};
+
+		function updatePassword (btn) {
+			if (Ext.getCmp('passwd').getValue() != Ext.getCmp('passwd1').getValue()) {
+				alert(changePasswordDlg.passwordError);
+				return;
+			}
+			Ext.Ajax.request({
+				//url : 'http://demo.ma-ppe.ch/YAjax.Test-SetPassword?curpass=123&pass1=abcd&pass2=abcd'
+				autoLoad: true,
+				url : 'server/updatePassword.php',
+				method : 'GET',
+				scope : this,
+
+				params : {
+					curpass 	: Ext.getCmp('curpass').getValue(),
+					pass1	 	: Ext.getCmp('passwd').getValue(),
+					pass2 		: Ext.getCmp('passwd1').getValue()
+				},
+
+				success : function(response) {
+					if (response.responseText == "") {
+						
+					} else {
+						alert(response.responseText);
+					}
+					
+				},
+				failure: function (response) {
+					alert(this.errorMessage);
+				}
+			});
+		}
 
 		// Apply config and call base class
 		Ext.apply(this, Ext.apply(this.initialConfig, config));
@@ -94,7 +131,7 @@ MaPPE.lostPasswordDlg = Ext.extend(Ext.FormPanel, {
 	ok: 'Ok',
 	cancel: 'Cancel',
 	emailId: 'E-mail Address',
-	message: 'In order to receive a new password, please enter your email address below and press OK</br></br>',
+	message: '<font size=\'2\'><b>In order to receive a new password, please enter your email address below and press OK</b></br></br>',
 
 	initComponent: function() {
 
@@ -228,6 +265,8 @@ MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 				{
 					xtype: 'combo',
 					id: 'languageCombo',
+					//maxWidth: '250px',
+					anchor: '100%',
 					fieldLabel: this.fieldLabel,
 					store: languageDataStore,
 					displayField: 'language',
@@ -237,7 +276,6 @@ MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 					listeners: {
 						select: {
 							fn: function(combo, value) {
-								//alert(value.json.language);
 								Ext.Ajax.request({
 									//url : 'http://demo.ma-ppe.ch/YAjax.Test-SetLanguage',
 									url : 'server/test.php',
@@ -303,7 +341,7 @@ MaPPE.personalInfoDlg = Ext.extend(Ext.FormPanel, {
 	labelZip: 'Zip',
 	labelCity:'City',
 	labelPhonePrivate:'Private Phone#',
-	labelPhoneProfessionals:'Professional Phone#',
+	labelPhoneProfessional:'Professional Phone#',
 	labelMobile:'Mobile#',
 	labelFax:'Fax',
 	labelEmailId:'Email Address',
@@ -384,7 +422,7 @@ MaPPE.personalInfoDlg = Ext.extend(Ext.FormPanel, {
 					anchor : '100%'
 				},{
 					id : 'professional',
-					fieldLabel: this.labelPhoneProfessionals,
+					fieldLabel: this.labelPhoneProfessional,
 					xType: 'textfield',
 					border : false,
 					anchor : '100%'
@@ -468,6 +506,239 @@ MaPPE.personalInfoDlg = Ext.extend(Ext.FormPanel, {
 				}
 			});
 		}
+
+		// Apply config and call base class
+		Ext.apply(this, Ext.apply(this.initialConfig, config));
+		MaPPE.changePasswordDlg.superclass.initComponent.apply(this, arguments);
+	},
+});
+
+MaPPE.visibilityDlg = Ext.extend(Ext.FormPanel, {
+
+	// Translatable strings...
+	title: 'Change visibility of personal information',
+	ok: 'Ok',
+	cancel: 'Cancel',
+	message: '<font size=\'2\'><b>Select what personal information is visible by other users</br></br></b></font>',
+	errorMessage:'An unexpected error occured! Please try again later!',
+
+	labelAddress:'Address',
+	labelPhonePrivate:'Private Phone number',
+	labelPhoneProfessional:'Professional Phone number',
+	labelMobile:'Mobile number',
+	labelFax:'Fax',
+	labelEmailId:'Email Address',
+
+	initComponent: function() {
+
+		// Set default values to optional parameters of the configuration
+		Ext.applyIf(this.initialConfig, {
+		});
+
+		var config = {
+			title: this.title,
+			layout: 'fit',
+			frame: true,
+			bodyStyle: 'padding:10px 5px 5px;',
+			defailtType: 'textfield',
+			bbar: {
+				items: [
+				'->',{
+					width: 65,
+					xtype: 'button',
+					text: this.ok,
+					handler: updateInfo
+				},
+				' ',{
+					width: 65,
+					xtype: 'button',
+					text: this.cancel
+					//handler: clearForm
+				}]
+			},
+
+			items: {
+				baseCls: 'x-plain',
+				border: true,
+				defaultType: 'textfield',
+				items: [{
+					xtype: 'box',
+					autoEl: {
+						cn: this.message
+					}
+				},{
+					xtype : 'checkboxgroup',
+					id : 'personalinfo',
+					columns : 1,
+					items : [{
+						boxLabel : this.labelAddress,
+						name : '1'
+					},{
+						boxLabel : this.labelEmailId,
+						name : '2'
+					},{
+						boxLabel : this.labelFax,
+						name : '3'
+					},{
+						boxLabel : this.labelMobile,
+						name : '4'
+					},{
+						boxLabel : this.labelPhonePrivate,
+						name : '5'
+					},{
+						boxLabel : this.labelPhoneProfessional,
+						name : '6'
+					}],
+
+					listeners : {
+					}
+				}]
+			}
+		};
+
+		Ext.Ajax.request({
+			//url : 'https://demo.ma-ppe.ch/YAjax.Test-GetPersonalDataVisibility'
+			autoLoad: true,
+			url : 'server/visibilityInfo.php',
+			method : 'GET',
+
+			scope : this,
+
+			success : function(response) {
+				if (Ext.decode(response.responseText).address) {
+					Ext.getCmp('personalinfo').setValue ({
+						1 : true
+					})
+				} else {
+					Ext.getCmp('personalinfo').setValue ({
+						1 : false
+					})
+				}
+
+				if (Ext.decode(response.responseText).email) {
+					Ext.getCmp('personalinfo').setValue ({
+						2 : true
+					})
+				} else {
+					Ext.getCmp('personalinfo').setValue ({
+						2 : false
+					})
+				}
+
+				if (Ext.decode(response.responseText).fax) {
+					Ext.getCmp('personalinfo').setValue ({
+						3 : true
+					})
+				} else {
+					Ext.getCmp('personalinfo').setValue ({
+						3 : false
+					})
+				}
+
+				if (Ext.decode(response.responseText).mobile) {
+					Ext.getCmp('personalinfo').setValue ({
+						4 : true
+					})
+				} else {
+					Ext.getCmp('personalinfo').setValue ({
+						4 : false
+					})
+				}
+
+				if (Ext.decode(response.responseText).phonePrivate) {
+					Ext.getCmp('personalinfo').setValue ({
+						5 : true
+					})
+				} else {
+					Ext.getCmp('personalinfo').setValue ({
+						5 : false
+					})
+				}
+
+				if (Ext.decode(response.responseText).phoneProfessional) {
+					Ext.getCmp('personalinfo').setValue ({
+						6 : true
+					})
+				} else {
+					Ext.getCmp('personalinfo').setValue ({
+						6 : false
+					})
+				}
+			},
+			failure: function (response) {
+				alert(this.errorMessage);
+			}
+		});
+
+		function updateInfo (btn) {
+			var temp = Ext.getCmp('personalinfo').items.items[0].checked;
+			Ext.Ajax.request({
+				//url : 'http://demo.ma-ppe.ch/YAjax.Test-SetPersonalDataVisibility'
+				autoLoad: true,
+				url : 'server/test.php',
+				method : 'GET',
+				params : {
+					address 			: Ext.getCmp('personalinfo').items.items[0].checked,
+					email 				: Ext.getCmp('personalinfo').items.items[1].checked,
+					fax 				: Ext.getCmp('personalinfo').items.items[2].checked,
+					mobile				: Ext.getCmp('personalinfo').items.items[3].checked,
+					phonePrivate 		: Ext.getCmp('personalinfo').items.items[4].checked,
+					professionalPhone	: Ext.getCmp('personalinfo').items.items[5].checked
+				},
+				scope : this,
+
+				success : function(response) {
+					if (response.responseText == "") {
+
+					} else {
+						alert(response.responseText);
+					}
+				},
+				failure: function (response) {
+					alert(this.errorMessage);
+				}
+			});
+		}
+
+		// Apply config and call base class
+		Ext.apply(this, Ext.apply(this.initialConfig, config));
+		MaPPE.changePasswordDlg.superclass.initComponent.apply(this, arguments);
+	},
+});
+
+MaPPE.userDlg = Ext.extend(Ext.FormPanel, {
+
+	// Translatable strings...
+	title: 'Change visibility of personal information',
+	ok: 'Ok',
+	cancel: 'Cancel',
+	errorMessage:'An unexpected error occured! Please try again later!',
+
+	initComponent: function() {
+
+		var changePasswordDlg = new MaPPE.changePasswordDlg();
+		var lostPasswordDlg = new MaPPE.lostPasswordDlg();
+		var personalInfoDlg = new MaPPE.personalInfoDlg();
+		var selectLangDlg = new MaPPE.selectLangDlg();
+		var visibilityDlg = new MaPPE.visibilityDlg();
+		// Set default values to optional parameters of the configuration
+		Ext.applyIf(this.initialConfig, {
+		});
+
+		var config = {
+			layout: 'accordion',
+			title: '',
+			layoutConfig: {
+				// animate: true
+			},
+			items:[
+			changePasswordDlg,
+			lostPasswordDlg,
+			personalInfoDlg,
+			selectLangDlg,
+			visibilityDlg
+			]
+		};
 
 		// Apply config and call base class
 		Ext.apply(this, Ext.apply(this.initialConfig, config));
