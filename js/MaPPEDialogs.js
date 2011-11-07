@@ -109,8 +109,8 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 				success : function(response) {
 					if (response.responseText == "") {
 
-					} else {
-						alert(response.responseText);
+						// } else {
+						// alert(response.responseText);
 					}
 
 				},
@@ -121,8 +121,8 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 		}
 
 		function cancel (btn) {
-			var temo = 		Ext.getCmp('id-changepasswd');
-			Ext.getCmp('id-changepasswd').expand(false);
+			//var temo = Ext.getCmp('id-changepasswd');
+			//Ext.getCmp('id-changepasswd').expand(false);
 		}
 
 		// Apply config and call base class
@@ -139,12 +139,15 @@ MaPPE.lostPasswordDlg = Ext.extend(Ext.FormPanel, {
 	cancel: 'Cancel',
 	emailId: 'E-mail Address',
 	message: '<font size=\'2\'><b>In order to receive a new password, please enter your email address below and press OK</b></br></br>',
+	emailError: 'Email Address is not correct!',
 
 	initComponent: function() {
 
 		// Set default values to optional parameters of the configuration
 		Ext.applyIf(this.initialConfig, {
 		});
+
+		lostPasswordDlg = this;
 
 		// Prepare config
 		var config = {
@@ -158,8 +161,8 @@ MaPPE.lostPasswordDlg = Ext.extend(Ext.FormPanel, {
 				'->',{
 					width: 65,
 					xtype: 'button',
-					text: this.ok
-					//handler: sendMail
+					text: this.ok,
+					handler: resetPasssword
 				},
 				' ',{
 					width: 65,
@@ -181,6 +184,7 @@ MaPPE.lostPasswordDlg = Ext.extend(Ext.FormPanel, {
 					}
 				},{
 					fieldLabel: this.emailId,
+					id : 'id-email',
 					xType: 'textfield',
 					border : false,
 					vtype : 'email',
@@ -188,6 +192,41 @@ MaPPE.lostPasswordDlg = Ext.extend(Ext.FormPanel, {
 				}]
 			}
 		};
+
+		function resetPasssword (btn) {
+			if (!Ext.getCmp('id-email').validate()) {
+				alert(lostPasswordDlg.emailError);
+				return;
+			}
+
+			Ext.Ajax.request({
+				//url : 'http://demo.ma-ppe.ch/YAjax.Test-LostPassword?email=test@ma-ppe.ch'
+				autoLoad: true,
+				url : 'server/resetPassword.php',
+				method : 'GET',
+				scope : this,
+
+				params : {
+					email 	: Ext.getCmp('id-email').getValue()
+				},
+
+				success : function(response) {
+					if (response.responseText == "") {
+						// } else {
+						// alert(response.responseText);
+					}
+
+				},
+				failure: function (response) {
+					alert(this.errorMessage);
+				}
+			});
+		}
+
+		// function cancel (btn) {
+		// var temo = 		Ext.getCmp('id-changepasswd');
+		// Ext.getCmp('id-changepasswd').expand(false);
+		// }
 
 		// Apply config and call base class
 		Ext.apply(this, Ext.apply(this.initialConfig, config));
@@ -236,6 +275,8 @@ MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 			}]
 		});
 
+		var selectedLangauage;
+
 		var config = {
 			title: this.title,
 			layout: 'fit',
@@ -247,8 +288,8 @@ MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 				'->',{
 					width: 65,
 					xtype: 'button',
-					text: this.ok
-					//handler: sendMail
+					text: this.ok,
+					handler: confirmLanguage
 				},
 				' ',{
 					width: 65,
@@ -283,26 +324,7 @@ MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 					listeners: {
 						select: {
 							fn: function(combo, value) {
-								Ext.Ajax.request({
-									//url : 'http://demo.ma-ppe.ch/YAjax.Test-SetLanguage',
-									url : 'server/test.php',
-									method : 'GET',
-									params : {
-										language : value.json.language
-									},
-									scope : this,
-
-									success : function(response) {
-										if (response.responseText == "") {
-
-										} else {
-											alert(response.responseText);
-										}
-									},
-									failure: function (response) {
-										alert(this.errorMessage);
-									}
-								});
+								selectedLangauage = value.json.language;
 							}
 						}
 					}
@@ -326,6 +348,29 @@ MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 				alert(this.errorMessage);
 			}
 		});
+
+		function confirmLanguage (btn) {
+			Ext.Ajax.request({
+				//url : 'http://demo.ma-ppe.ch/YAjax.Test-SetLanguage',
+				url : 'server/test.php',
+				method : 'GET',
+				params : {
+					language : selectedLanguage
+				},
+				scope : this,
+
+				success : function(response) {
+					if (response.responseText == "") {
+
+						// } else {
+						// alert(response.responseText);
+					}
+				},
+				failure: function (response) {
+					alert(this.errorMessage);
+				}
+			});
+		}
 
 		// Apply config and call base class
 		Ext.apply(this, Ext.apply(this.initialConfig, config));
@@ -504,8 +549,8 @@ MaPPE.personalInfoDlg = Ext.extend(Ext.FormPanel, {
 				success : function(response) {
 					if (response.responseText == "") {
 
-					} else {
-						alert(response.responseText);
+						// } else {
+						// alert(response.responseText);
 					}
 				},
 				failure: function (response) {
@@ -697,8 +742,8 @@ MaPPE.visibilityDlg = Ext.extend(Ext.FormPanel, {
 				success : function(response) {
 					if (response.responseText == "") {
 
-					} else {
-						alert(response.responseText);
+						// } else {
+						// alert(response.responseText);
 					}
 				},
 				failure: function (response) {
