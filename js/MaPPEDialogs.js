@@ -108,9 +108,6 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 
 				success : function(response) {
 					if (response.responseText == "") {
-
-						// } else {
-						// alert(response.responseText);
 					}
 
 				},
@@ -121,8 +118,10 @@ MaPPE.changePasswordDlg = Ext.extend(Ext.FormPanel, {
 		}
 
 		function cancel (btn) {
-			//var temo = Ext.getCmp('id-changepasswd');
-			//Ext.getCmp('id-changepasswd').expand(false);
+			Ext.getCmp('curpass').reset();
+			Ext.getCmp('passwd').reset();
+			Ext.getCmp('passwd1').reset();
+			btn.ownerCt.ownerCt.collapse();
 		}
 
 		// Apply config and call base class
@@ -167,8 +166,8 @@ MaPPE.lostPasswordDlg = Ext.extend(Ext.FormPanel, {
 				' ',{
 					width: 65,
 					xtype: 'button',
-					text: this.cancel
-					//handler: clearForm
+					text: this.cancel,
+					handler: cancel
 				}]
 			},
 
@@ -212,8 +211,6 @@ MaPPE.lostPasswordDlg = Ext.extend(Ext.FormPanel, {
 
 				success : function(response) {
 					if (response.responseText == "") {
-						// } else {
-						// alert(response.responseText);
 					}
 
 				},
@@ -223,10 +220,10 @@ MaPPE.lostPasswordDlg = Ext.extend(Ext.FormPanel, {
 			});
 		}
 
-		// function cancel (btn) {
-		// var temo = 		Ext.getCmp('id-changepasswd');
-		// Ext.getCmp('id-changepasswd').expand(false);
-		// }
+		function cancel (btn) {
+			Ext.getCmp('id-email').reset();
+			btn.ownerCt.ownerCt.collapse();
+		}
 
 		// Apply config and call base class
 		Ext.apply(this, Ext.apply(this.initialConfig, config));
@@ -240,10 +237,10 @@ MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 	title: 'Select Language',
 	ok: 'Ok',
 	cancel: 'Cancel',
-	lang:'Language',
+	lang: 'Language',
 	message: 'Select your Language</br></br>',
-	fieldLabel:'Language',
-	errorMessage:'An unexpected error occured! Please try again later!',
+	fieldLabel: 'Language',
+	errorMessage: 'An unexpected error occured! Please try again later!',
 
 	initComponent: function() {
 
@@ -294,8 +291,8 @@ MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 				' ',{
 					width: 65,
 					xtype: 'button',
-					text: this.cancel
-					//handler: clearForm
+					text: this.cancel,
+					handler: clearForm
 				}]
 			},
 
@@ -303,14 +300,7 @@ MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 				baseCls: 'x-plain',
 				layout:'form',
 				border: true,
-				items: [
-				// {
-				// xtype: 'box',
-				// autoEl: {
-				// cn: this.message
-				// }
-				// },
-				{
+				items: [{
 					xtype: 'combo',
 					id: 'languageCombo',
 					//maxWidth: '250px',
@@ -361,15 +351,16 @@ MaPPE.selectLangDlg = Ext.extend(Ext.FormPanel, {
 
 				success : function(response) {
 					if (response.responseText == "") {
-
-						// } else {
-						// alert(response.responseText);
 					}
 				},
 				failure: function (response) {
 					alert(this.errorMessage);
 				}
 			});
+		}
+
+		function clearForm (btn) {
+			btn.ownerCt.ownerCt.collapse();
 		}
 
 		// Apply config and call base class
@@ -385,18 +376,18 @@ MaPPE.personalInfoDlg = Ext.extend(Ext.FormPanel, {
 	update: 'Update',
 	cancel: 'Cancel',
 	message: '<font size=\'2\'><b>Update your personal information</br></br></b></font>',
-	errorMessage:'An unexpected error occured! Please try again later!',
+	errorMessage: 'An unexpected error occured! Please try again later!',
 
-	labelFirstName:'First Name',
-	labelLastName:'Last Name',
-	labelAddress:'Address',
+	labelFirstName: 'First Name',
+	labelLastName: 'Last Name',
+	labelAddress: 'Address',
 	labelZip: 'Zip',
-	labelCity:'City',
-	labelPhonePrivate:'Private Phone#',
-	labelPhoneProfessional:'Professional Phone#',
-	labelMobile:'Mobile#',
-	labelFax:'Fax',
-	labelEmailId:'Email Address',
+	labelCity: 'City',
+	labelPhonePrivate: 'Private Phone#',
+	labelPhoneProfessional: 'Professional Phone#',
+	labelMobile: 'Mobile#',
+	labelFax: 'Fax',
+	labelEmailId: 'Email Address',
 
 	initComponent: function() {
 
@@ -421,8 +412,8 @@ MaPPE.personalInfoDlg = Ext.extend(Ext.FormPanel, {
 				' ',{
 					width: 65,
 					xtype: 'button',
-					text: this.cancel
-					//handler: clearForm
+					text: this.cancel,
+					handler: cancel
 				}]
 			},
 
@@ -501,30 +492,35 @@ MaPPE.personalInfoDlg = Ext.extend(Ext.FormPanel, {
 			}
 		};
 
-		Ext.Ajax.request({
-			//url : 'https://demo.ma-ppe.ch/YAjax.Test-GetPersonalData'
-			autoLoad: true,
-			url : 'server/personalInfo.php',
-			method : 'GET',
+		loadDefaultValues();
 
-			scope : this,
+		function loadDefaultValues() {
+			Ext.Ajax.request({
+				//url : 'https://demo.ma-ppe.ch/YAjax.Test-GetPersonalData'
+				autoLoad: true,
+				url : 'server/personalInfo.php',
+				method : 'GET',
 
-			success : function(response) {
-				Ext.getCmp('address').setValue(Ext.decode(response.responseText).address);
-				Ext.getCmp('city').setValue(Ext.decode(response.responseText).city);
-				Ext.getCmp('email').setValue(Ext.decode(response.responseText).email);
-				Ext.getCmp('fax').setValue(Ext.decode(response.responseText).fax);
-				Ext.getCmp('firstname').setValue(Ext.decode(response.responseText).firstName);
-				Ext.getCmp('lastname').setValue(Ext.decode(response.responseText).lastName);
-				Ext.getCmp('mobile').setValue(Ext.decode(response.responseText).mobile);
-				Ext.getCmp('private').setValue(Ext.decode(response.responseText).phonePrivate);
-				Ext.getCmp('professional').setValue(Ext.decode(response.responseText).phoneProfessional);
-				Ext.getCmp('zip').setValue(Ext.decode(response.responseText).zip);
-			},
-			failure: function (response) {
-				alert(this.errorMessage);
-			}
-		});
+				scope : this,
+
+				success : function(response) {
+					Ext.getCmp('address').setValue(Ext.decode(response.responseText).address);
+					Ext.getCmp('city').setValue(Ext.decode(response.responseText).city);
+					Ext.getCmp('email').setValue(Ext.decode(response.responseText).email);
+					Ext.getCmp('fax').setValue(Ext.decode(response.responseText).fax);
+					Ext.getCmp('firstname').setValue(Ext.decode(response.responseText).firstName);
+					Ext.getCmp('lastname').setValue(Ext.decode(response.responseText).lastName);
+					Ext.getCmp('mobile').setValue(Ext.decode(response.responseText).mobile);
+					Ext.getCmp('private').setValue(Ext.decode(response.responseText).phonePrivate);
+					Ext.getCmp('professional').setValue(Ext.decode(response.responseText).phoneProfessional);
+					Ext.getCmp('zip').setValue(Ext.decode(response.responseText).zip);
+				},
+				failure: function (response) {
+					alert(this.errorMessage);
+				}
+			});
+
+		}
 
 		function updateInfo (btn) {
 			Ext.Ajax.request({
@@ -548,15 +544,17 @@ MaPPE.personalInfoDlg = Ext.extend(Ext.FormPanel, {
 
 				success : function(response) {
 					if (response.responseText == "") {
-
-						// } else {
-						// alert(response.responseText);
 					}
 				},
 				failure: function (response) {
 					alert(this.errorMessage);
 				}
 			});
+		}
+
+		function cancel (btn) {
+			loadDefaultValues();
+			btn.ownerCt.ownerCt.collapse();
 		}
 
 		// Apply config and call base class
@@ -604,8 +602,8 @@ MaPPE.visibilityDlg = Ext.extend(Ext.FormPanel, {
 				' ',{
 					width: 65,
 					xtype: 'button',
-					text: this.cancel
-					//handler: clearForm
+					text: this.cancel,
+					handler: cancel
 				}]
 			},
 
@@ -640,87 +638,88 @@ MaPPE.visibilityDlg = Ext.extend(Ext.FormPanel, {
 					},{
 						boxLabel : this.labelPhoneProfessional,
 						name : '6'
-					}],
-
-					listeners : {
-					}
+					}]
 				}]
 			}
 		};
 
-		Ext.Ajax.request({
-			//url : 'https://demo.ma-ppe.ch/YAjax.Test-GetPersonalDataVisibility'
-			autoLoad: true,
-			url : 'server/visibilityInfo.php',
-			method : 'GET',
+		loadDefaultValues();
+		function loadDefaultValues() {
+			Ext.Ajax.request({
+				//url : 'https://demo.ma-ppe.ch/YAjax.Test-GetPersonalDataVisibility'
+				autoLoad: true,
+				url : 'server/visibilityInfo.php',
+				method : 'GET',
 
-			scope : this,
+				scope : this,
 
-			success : function(response) {
-				if (Ext.decode(response.responseText).address) {
-					Ext.getCmp('personalinfo').setValue ({
-						1 : true
-					})
-				} else {
-					Ext.getCmp('personalinfo').setValue ({
-						1 : false
-					})
+				success : function(response) {
+					if (Ext.decode(response.responseText).address) {
+						Ext.getCmp('personalinfo').setValue ({
+							1 : true
+						})
+					} else {
+						Ext.getCmp('personalinfo').setValue ({
+							1 : false
+						})
+					}
+
+					if (Ext.decode(response.responseText).email) {
+						Ext.getCmp('personalinfo').setValue ({
+							2 : true
+						})
+					} else {
+						Ext.getCmp('personalinfo').setValue ({
+							2 : false
+						})
+					}
+
+					if (Ext.decode(response.responseText).fax) {
+						Ext.getCmp('personalinfo').setValue ({
+							3 : true
+						})
+					} else {
+						Ext.getCmp('personalinfo').setValue ({
+							3 : false
+						})
+					}
+
+					if (Ext.decode(response.responseText).mobile) {
+						Ext.getCmp('personalinfo').setValue ({
+							4 : true
+						})
+					} else {
+						Ext.getCmp('personalinfo').setValue ({
+							4 : false
+						})
+					}
+
+					if (Ext.decode(response.responseText).phonePrivate) {
+						Ext.getCmp('personalinfo').setValue ({
+							5 : true
+						})
+					} else {
+						Ext.getCmp('personalinfo').setValue ({
+							5 : false
+						})
+					}
+
+					if (Ext.decode(response.responseText).phoneProfessional) {
+						Ext.getCmp('personalinfo').setValue ({
+							6 : true
+						})
+					} else {
+						Ext.getCmp('personalinfo').setValue ({
+							6 : false
+						})
+					}
+				},
+				failure: function (response) {
+					alert(this.errorMessage);
 				}
+			});
 
-				if (Ext.decode(response.responseText).email) {
-					Ext.getCmp('personalinfo').setValue ({
-						2 : true
-					})
-				} else {
-					Ext.getCmp('personalinfo').setValue ({
-						2 : false
-					})
-				}
-
-				if (Ext.decode(response.responseText).fax) {
-					Ext.getCmp('personalinfo').setValue ({
-						3 : true
-					})
-				} else {
-					Ext.getCmp('personalinfo').setValue ({
-						3 : false
-					})
-				}
-
-				if (Ext.decode(response.responseText).mobile) {
-					Ext.getCmp('personalinfo').setValue ({
-						4 : true
-					})
-				} else {
-					Ext.getCmp('personalinfo').setValue ({
-						4 : false
-					})
-				}
-
-				if (Ext.decode(response.responseText).phonePrivate) {
-					Ext.getCmp('personalinfo').setValue ({
-						5 : true
-					})
-				} else {
-					Ext.getCmp('personalinfo').setValue ({
-						5 : false
-					})
-				}
-
-				if (Ext.decode(response.responseText).phoneProfessional) {
-					Ext.getCmp('personalinfo').setValue ({
-						6 : true
-					})
-				} else {
-					Ext.getCmp('personalinfo').setValue ({
-						6 : false
-					})
-				}
-			},
-			failure: function (response) {
-				alert(this.errorMessage);
-			}
-		});
+		}
 
 		function updateInfo (btn) {
 			var temp = Ext.getCmp('personalinfo').items.items[0].checked;
@@ -741,15 +740,17 @@ MaPPE.visibilityDlg = Ext.extend(Ext.FormPanel, {
 
 				success : function(response) {
 					if (response.responseText == "") {
-
-						// } else {
-						// alert(response.responseText);
 					}
 				},
 				failure: function (response) {
 					alert(this.errorMessage);
 				}
 			});
+		}
+
+		function cancel(btn) {
+			loadDefaultValues();
+			btn.ownerCt.ownerCt.collapse();
 		}
 
 		// Apply config and call base class
@@ -761,10 +762,7 @@ MaPPE.visibilityDlg = Ext.extend(Ext.FormPanel, {
 MaPPE.userDlg = Ext.extend(Ext.FormPanel, {
 
 	// Translatable strings...
-	title: 'Change visibility of personal information',
-	ok: 'Ok',
-	cancel: 'Cancel',
-	errorMessage:'An unexpected error occured! Please try again later!',
+	title: 'User Preferences',
 
 	initComponent: function() {
 
@@ -773,6 +771,7 @@ MaPPE.userDlg = Ext.extend(Ext.FormPanel, {
 		var personalInfoDlg = new MaPPE.personalInfoDlg();
 		var selectLangDlg = new MaPPE.selectLangDlg();
 		var visibilityDlg = new MaPPE.visibilityDlg();
+
 		// Set default values to optional parameters of the configuration
 		Ext.applyIf(this.initialConfig, {
 		});
@@ -781,9 +780,7 @@ MaPPE.userDlg = Ext.extend(Ext.FormPanel, {
 			layout: 'accordion',
 			title: '',
 			bodyStyle: 'background-color:#DFE8F6',
-			layoutConfig: {
-				// animate: true
-			},
+
 			items:[
 			changePasswordDlg,
 			lostPasswordDlg,
