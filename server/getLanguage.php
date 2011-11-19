@@ -2,11 +2,7 @@
 	"current": "Francais",
 	
     "languages": [
-        {
-            "language": "Francais"
-        },
-        {
-            "language": "English"
-        }
+        "Francais",
+		"English"
     ]
 }
